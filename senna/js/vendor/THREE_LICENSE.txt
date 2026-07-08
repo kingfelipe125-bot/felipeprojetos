@@ -1,0 +1,5 @@
+three.min.js (r128) — https://threejs.org
+Copyright 2010-2021 Three.js Authors
+MIT License — https://github.com/mrdoob/three.js/blob/r128/LICENSE
+
+Vendored locally so the site has no external CDN dependency and works offline.

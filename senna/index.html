@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ayrton Senna — Sempre Presente</title>
+<meta name="description" content="Um tributo interativo a Ayrton Senna: sua história, seus carros, seu capacete e uma sala de troféus virtual em 3D.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="rain-canvas-wrap"><canvas id="rain-canvas"></canvas></div>
+<div class="grain-overlay"></div>
+<div class="fade-overlay" id="fade-overlay"></div>
+
+<nav id="main-nav">
+  <div class="logo"><span class="logo-num">12</span><span>SENNA<em>SEMPRE</em></span></div>
+  <div class="navlinks">
+    <a href="#historia">História</a>
+    <a href="#carros">Carros</a>
+    <a href="#capacete">Capacete</a>
+    <a href="#sala-trofeus">Sala de Troféus</a>
+    <a href="#legado">Legado</a>
+  </div>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Menu">☰</button>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="hero">
+  <div class="hero-bg-grid"></div>
+  <p class="eyebrow">21 Mar 1960 — 01 Mai 1994</p>
+  <h1 class="hero-title">AYRTON<br><span class="accent">SENNA</span></h1>
+  <p class="hero-typewriter"><span id="typewriter-text"></span><span class="caret">|</span></p>
+  <p class="hero-sub">Três títulos mundiais. Seis vitórias em Mônaco. Uma paixão que nunca parou de acelerar o coração do Brasil.</p>
+  <a href="#historia" class="scroll-cue">
+    <span>DESÇA A PISTA</span>
+    <span class="bar"></span>
+  </a>
+</header>
+
+<!-- ================= HISTÓRIA / TIMELINE ================= -->
+<section class="section" id="historia">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">A Trajetória</p>
+      <h2>Uma história contada em curvas</h2>
+      <p>Do kart em São Paulo às três estrelas mundiais. Role para acompanhar cada capítulo — a linha do tempo se acende conforme você avança.</p>
+    </div>
+
+    <div class="timeline" id="timeline">
+      <div class="timeline-track"><div class="timeline-fill" id="timeline-fill"></div></div>
+
+      <div class="tl-item" data-side="left">
+        <div class="tl-dot"></div>
+        <div class="tl-card corner-frame">
+          <span class="tl-year mono">1960 – 1976</span>
+          <h3>O menino do kart</h3>
+          <p>Nascido em São Paulo em 21 de março de 1960, Ayrton Senna da Silva guia seu primeiro kart aos quatro anos, num terreno perto de casa. Aos treze, já compete oficialmente — e não para mais de vencer.</p>
+          <div class="tl-photo-frame" data-label="senna/senna-kart-infancia.jpg" data-desc="Foto real: Senna criança/adolescente pilotando kart"></div>
+        </div>
+      </div>
+
+      <div class="tl-item" data-side="right">
+        <div class="tl-dot"></div>
+        <div class="tl-card corner-frame">
+          <span class="tl-year mono">1981 – 1983</span>
+          <h3>Inglaterra e a decolagem</h3>
+          <p>Muda-se para a Inglaterra para correr na Fórmula Ford. Em 1983, torna-se Campeão Britânico de Fórmula 3, vencendo com uma superioridade que já anunciava o piloto que viria a ser.</p>
+          <div class="tl-photo-frame" data-label="senna/senna-f3-1983.jpg" data-desc="Foto real: Senna na Fórmula 3 britânica, 1983"></div>
+        </div>
+      </div>
+
+      <div class="tl-item" data-side="left">
+        <div class="tl-dot"></div>
+        <div class="tl-card corner-frame">
+          <span class="tl-year mono">1984 – 1985</span>
+          <h3>A estreia e o dilúvio de Estoril</h3>
+          <p>Estreia na Fórmula 1 pela Toleman em 1984, com um surpreendente 2º lugar debaixo de chuva em Mônaco. Em 1985, já na Lotus, vence sua primeira corrida — também sob chuva torrencial — em Estoril, Portugal.</p>
+          <div class="tl-photo-frame" data-label="carros/toleman/senna-toleman-monaco-1984.jpg" data-desc="Foto real: Senna, Toleman TG184, Mônaco 1984"></div>
+        </div>
+      </div>
+
+      <div class="tl-item" data-side="right">
+        <div class="tl-dot"></div>
+        <div class="tl-card corner-frame">
+          <span class="tl-year mono">1985 – 1987</span>
+          <h3>Os anos Lotus</h3>
+          <p>Na Lotus, Senna se firma como um dos melhores pilotos do grid — mestre absoluto do treino classificatório, capaz de arrancar décimos de segundo de onde ninguém mais via espaço.</p>
+          <div class="tl-photo-frame" data-label="carros/lotus/senna-lotus-98t.jpg" data-desc="Foto real: Senna, Lotus 97T/98T/99T, 1985-1987"></div>
+        </div>
+      </div>
+
+      <div class="tl-item" data-side="left">
+        <div class="tl-dot"></div>
+        <div class="tl-card corner-frame">
+          <span class="tl-year mono">1988</span>
+          <h3>O primeiro título</h3>
+          <p>Contratado pela McLaren, forma com Alain Prost a dupla mais dominante da história recente da F1. Em Suzuka, conquista sua primeira coroa mundial após largar mal e remontar do 14º ao 1º lugar.</p>
+          <div class="tl-photo-frame" data-label="carros/mclaren/senna-mclaren-mp4-4-1988.jpg" data-desc="Foto real: Senna, McLaren MP4/4, campeão 1988"></div>
+        </div>
+      </div>
+
+      <div class="tl-item" data-side="right">
+        <div class="tl-dot"></div>
+        <div class="tl-card corner-frame">
+          <span class="tl-year mono">1990 – 1991</span>
+          <h3>Bicampeão, tricampeão</h3>
+          <p>Conquista o título de 1990 e, em 1991, vence em casa — em Interlagos — pilotando praticamente sem câmbio nas voltas finais, um dos momentos mais lembrados de sua carreira. Encerra o ano como tricampeão mundial.</p>
+          <div class="tl-photo-frame" data-label="carros/mclaren/senna-mclaren-interlagos-1991.jpg" data-desc="Foto real: Senna comemorando vitória em Interlagos, 1991"></div>
+        </div>
+      </div>
+
+      <div class="tl-item" data-side="left">
+        <div class="tl-dot"></div>
+        <div class="tl-card corner-frame">
+          <span class="tl-year mono">1994</span>
+          <h3>Williams e Ímola</h3>
+          <p>Em busca de um quarto título, Senna assina com a Williams para 1994. Em 1º de maio, durante o GP de San Marino, sofre um acidente fatal na curva de Tamburello, em Ímola. O mundo perde um de seus maiores ídolos.</p>
+          <div class="tl-photo-frame" data-label="carros/williams/senna-williams-fw16-1994.jpg" data-desc="Foto real: Senna, Williams FW16, 1994"></div>
+        </div>
+      </div>
+
+      <div class="tl-item" data-side="right">
+        <div class="tl-dot"></div>
+        <div class="tl-card corner-frame">
+          <span class="tl-year mono">Depois</span>
+          <h3>O legado</h3>
+          <p>Mais de três décadas depois, o Instituto Ayrton Senna já transformou a vida de milhões de crianças no Brasil através da educação — o mesmo cuidado com o próximo que Senna já demonstrava dentro e fora das pistas.</p>
+          <div class="tl-photo-frame" data-label="senna/instituto-ayrton-senna.jpg" data-desc="Foto real: atividades do Instituto Ayrton Senna"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CARROS ================= -->
+<section class="section section-alt" id="carros">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">A Garagem</p>
+      <h2>Os carros que ele domou</h2>
+      <p>De cada equipe, uma máquina diferente — e o mesmo talento incontestável ao volante.</p>
+    </div>
+
+    <div class="car-grid">
+      <article class="car-card corner-frame">
+        <div class="car-photo-frame" data-label="carros/toleman/toleman-tg184.jpg" data-desc="Foto real: Toleman TG184, 1984"></div>
+        <div class="car-info">
+          <span class="mono car-team">TOLEMAN</span>
+          <h3>TG184</h3>
+          <p>Estreia na F1 em 1984. Motor Hart turbo 1.5L. Ficou marcado pelo 2º lugar debaixo de chuva em Mônaco — a primeira demonstração de gênio de Senna na categoria.</p>
+        </div>
+      </article>
+
+      <article class="car-card corner-frame">
+        <div class="car-photo-frame" data-label="carros/lotus/lotus-97t-98t-99t.jpg" data-desc="Foto real: Lotus 97T / 98T / 99T, 1985-1987"></div>
+        <div class="car-info">
+          <span class="mono car-team">LOTUS</span>
+          <h3>97T · 98T · 99T · 100T</h3>
+          <p>1985 a 1987. Motores Renault e Honda turbo. Primeira vitória em Estoril (1985) e mestre absoluto do qualifying, com poles memoráveis em Mônaco e Detroit.</p>
+        </div>
+      </article>
+
+      <article class="car-card corner-frame featured">
+        <div class="car-photo-frame" data-label="carros/mclaren/mclaren-mp4-4.jpg" data-desc="Foto real: McLaren MP4/4, campeão 1988"></div>
+        <div class="car-info">
+          <span class="mono car-team">MCLAREN</span>
+          <h3>MP4/4 · MP4/5 · MP4/6 · MP4/7A · MP4/8</h3>
+          <p>1988 a 1993. Motores Honda turbo e V10/V12 aspirados. Os anos de maior domínio: 3 títulos mundiais (1988, 1990, 1991), dezenas de vitórias e a rivalidade histórica com Alain Prost.</p>
+        </div>
+      </article>
+
+      <article class="car-card corner-frame">
+        <div class="car-photo-frame" data-label="carros/williams/williams-fw16.jpg" data-desc="Foto real: Williams FW16, 1994"></div>
+        <div class="car-info">
+          <span class="mono car-team">WILLIAMS</span>
+          <h3>FW16</h3>
+          <p>1994. Motor Renault V10. O último carro de Senna na Fórmula 1, em busca do quarto título mundial.</p>
+        </div>
+      </article>
+    </div>
+
+    <!-- 360 interactive viewer -->
+    <div class="viewer-360-block">
+      <div class="section-head" style="margin-bottom:34px;">
+        <p class="eyebrow">Interativo</p>
+        <h2>Gire o carro. Sinta cada ângulo.</h2>
+        <p>Arraste com o mouse ou o dedo, na horizontal, para girar o modelo em 360°. Nada de setinhas — a máquina responde ao seu toque.</p>
+      </div>
+      <div class="viewer-360" id="viewer-360" data-frames-path="images/360/mclaren-mp4-4/" data-frame-count="36" data-frame-prefix="frame-" data-frame-ext=".jpg">
+        <div class="viewer-360-stage" id="viewer-360-stage">
+          <img id="viewer-360-img" alt="McLaren MP4/4 — vista 360°" draggable="false">
+        </div>
+        <div class="viewer-360-hint">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 12h18M3 12l5-5M3 12l5 5M21 12l-5-5M21 12l-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>arraste para girar</span>
+        </div>
+        <div class="viewer-360-progress mono" id="viewer-360-progress">01 / 36</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CAPACETE ================= -->
+<section class="section helmet-section" id="capacete">
+  <div class="wrap helmet-wrap">
+    <div class="helmet-photo-frame" data-label="capacete/capacete-senna-frontal.jpg" data-desc="Foto real: capacete de Ayrton Senna, vista frontal"></div>
+    <div class="helmet-text">
+      <p class="eyebrow">O Capacete</p>
+      <h2>Amarelo, verde e azul — a identidade que nunca mudou</h2>
+      <p>Do primeiro kart até o último Grande Prêmio, Senna correu sempre com a mesma pintura: fundo amarelo com listras verde e azul, cores inspiradas na bandeira do Brasil. Um símbolo tão reconhecível quanto o próprio piloto — e que se tornou, com o tempo, um ícone do automobilismo mundial.</p>
+      <div class="helmet-detail-row">
+        <div class="helmet-photo-frame small" data-label="capacete/capacete-senna-lateral.jpg" data-desc="Foto real: capacete, vista lateral"></div>
+        <div class="helmet-photo-frame small" data-label="capacete/capacete-senna-detalhe.jpg" data-desc="Foto real: capacete, detalhe/textura"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SALA DE TROFÉUS 3D ================= -->
+<section class="section trophy-section" id="sala-trofeus">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Experiência 3D</p>
+      <h2>A Sala de Troféus Virtual</h2>
+      <p>Um espaço em 3D que você explora de verdade: arraste para olhar ao redor em 360°, e mude de cômodo para atravessar cada era da carreira. Os troféus e molduras aguardam as fotos reais — veja o aviso em cada peça.</p>
+    </div>
+  </div>
+
+  <div class="trophy-room-shell">
+    <canvas id="trophy-canvas"></canvas>
+
+    <div class="troom-vignette"></div>
+
+    <div class="troom-hint" id="troom-hint">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 12h18M3 12l5-5M3 12l5 5M21 12l-5-5M21 12l-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>arraste para olhar ao redor</span>
+    </div>
+
+    <div class="troom-loading" id="troom-loading">
+      <div class="troom-spinner"></div>
+      <span class="mono">montando a sala…</span>
+    </div>
+
+    <div class="troom-room-label mono" id="troom-room-label">SALA 1 · ASCENSÃO</div>
+
+    <div class="troom-nav">
+      <button class="troom-nav-btn" id="troom-prev" aria-label="Sala anterior">‹</button>
+      <div class="troom-dots" id="troom-dots"></div>
+      <button class="troom-nav-btn" id="troom-next" aria-label="Próxima sala">›</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LEGADO ================= -->
+<section class="section legacy-section" id="legado">
+  <div class="wrap">
+    <div class="section-head center">
+      <p class="eyebrow">Em suas palavras</p>
+      <h2>O que ele deixou</h2>
+    </div>
+
+    <div class="quote-grid">
+      <blockquote class="quote-card corner-frame">
+        <p>“Se você não vai mais para o vão que existe, você não é mais um piloto de corrida.”</p>
+        <cite class="mono">— Ayrton Senna, 1990</cite>
+      </blockquote>
+      <blockquote class="quote-card corner-frame">
+        <p>“Enquanto eu tiver um carro na pista, vou em busca da vitória.”</p>
+        <cite class="mono">— Ayrton Senna</cite>
+      </blockquote>
+      <blockquote class="quote-card corner-frame">
+        <p>“A Fórmula 1 me deu a chance de ser campeão. Mas o que eu quero deixar é maior do que qualquer título.”</p>
+        <cite class="mono">— Ayrton Senna</cite>
+      </blockquote>
+    </div>
+
+    <div class="legacy-cta corner-frame">
+      <div class="helmet-photo-frame wide" data-label="senna/instituto-ayrton-senna-2.jpg" data-desc="Foto real: crianças atendidas pelo Instituto Ayrton Senna"></div>
+      <div>
+        <h3>Instituto Ayrton Senna</h3>
+        <p>Criado em 1994 pela família de Senna, o instituto já impactou milhões de crianças e jovens brasileiros através da educação — transformando em legado social a mesma determinação que o fez tricampeão mundial.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap footer-wrap">
+    <p>Site-tributo não-oficial, feito por um fã. Todos os fatos aqui apresentados são de domínio público. As fotografias reais de Ayrton Senna, seus carros, capacete e troféus devem ser adicionadas pelo responsável do site — veja <code>images/MANIFEST.md</code> — respeitando os direitos autorais de cada imagem.</p>
+    <p class="mono footer-num">SEMPRE 12. SEMPRE SENNA.</p>
+  </div>
+</footer>
+
+<script src="js/vendor/three.min.js" onerror="window.__threeLoadFailed=true"></script>
+<script src="js/image-fallback.js"></script>
+<script src="js/main.js"></script>
+<script src="js/trophy-room.js"></script>
+</body>
+</html>
