@@ -64,6 +64,67 @@
   window.addEventListener('resize', updateTimelineFill);
   updateTimelineFill();
 
+  /* ---------------- car tech: ficha técnica toggle ---------------- */
+  document.querySelectorAll('.tech-toggle').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var detail = btn.nextElementSibling;
+      var open = detail.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+
+  /* ---------------- car tech: animated stat counters ---------------- */
+  var reduceMotionStats = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function animateCount(el){
+    var target = parseFloat(el.getAttribute('data-count'));
+    if(isNaN(target)) return;
+    if(reduceMotionStats){ el.textContent = target; return; }
+    var start = performance.now();
+    var duration = 1300;
+    function tick(now){
+      var t = Math.min(1, (now - start) / duration);
+      var eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = Math.round(target * eased);
+      if(t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  var statIo = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        animateCount(entry.target);
+        statIo.unobserve(entry.target);
+      }
+    });
+  }, {threshold:.6});
+  document.querySelectorAll('.stat-num').forEach(function(el){ statIo.observe(el); });
+
+  /* ---------------- technology era timeline: reveal + fill ---------------- */
+  var techItems = document.querySelectorAll('.tech-era-item');
+  var techTrack = document.querySelector('.tech-era-track');
+  var techFill = document.getElementById('tech-era-fill');
+  var techIo = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting) entry.target.classList.add('in-view');
+    });
+  }, {threshold:.4});
+  techItems.forEach(function(item){ techIo.observe(item); });
+
+  function updateTechFill(){
+    if(!techTrack) return;
+    var rect = techTrack.getBoundingClientRect();
+    var vh = window.innerHeight;
+    var isVertical = window.innerWidth <= 900;
+    var total = isVertical ? rect.height : rect.width;
+    var visible = Math.min(total, Math.max(0, vh * 0.65 - rect.top));
+    var pct = total > 0 ? Math.min(100, (visible/total) * 100) : 0;
+    if(isVertical){ techFill.style.height = pct + '%'; techFill.style.width = '100%'; }
+    else { techFill.style.width = pct + '%'; techFill.style.height = '100%'; }
+  }
+  window.addEventListener('scroll', updateTechFill, {passive:true});
+  window.addEventListener('resize', updateTechFill);
+  updateTechFill();
+
   /* ---------------- rain canvas (atmosphere, generative — not a photo) ---------------- */
   var canvas = document.getElementById('rain-canvas');
   var ctx = canvas.getContext('2d');

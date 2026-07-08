@@ -18,6 +18,16 @@
       img.draggable = false;
       frame.appendChild(img);
       frame.classList.add('has-photo');
+
+      // Creative Commons / attribution-required photos must keep their credit
+      // visible. If the frame carries data-credit, show it as a small caption.
+      var credit = frame.getAttribute('data-credit');
+      if(credit){
+        var cap = document.createElement('span');
+        cap.className = 'photo-credit';
+        cap.textContent = credit;
+        frame.appendChild(cap);
+      }
     };
     img.onerror = function(){ /* keep placeholder as-is */ };
     img.src = src;

@@ -18,6 +18,45 @@ Formato recomendado: `.jpg`, orientação conforme indicado, o mais próximo
 possível da proporção pedida (o site já faz `object-fit: cover`, então um
 pequeno recorte automático é tolerado).
 
+## ✅ Fotos reais já localizadas, prontas para baixar
+
+Fiz a pesquisa e já encontrei fotos **reais** (não geradas por IA) e com
+**licença Creative Commons** no Wikimedia Commons para vários espaços do site.
+Eu não consegui baixar os arquivos automaticamente (o ambiente onde rodo tem o
+acesso à Wikimedia bloqueado por política de rede), mas você pode baixar cada
+uma em ~10 segundos: abra o link, clique em "Original file" / "Ver arquivo
+original" para baixar na resolução máxima, salve com o nome indicado na pasta
+certa.
+
+O site já está preparado para mostrar o crédito automaticamente (aparece um
+selinho discreto no canto da foto assim que ela é adicionada) — exigência das
+licenças CC BY / CC BY-SA. **Antes de publicar, confira na própria página do
+arquivo o nome do autor/fotógrafo** e, se puder, complete o `data-credit` no
+`index.html` com "Foto: NOME — CC BY-SA X.X" para dar o crédito completo.
+
+| Onde salvar | Fonte (Wikimedia Commons) | Licença |
+|---|---|---|
+| `capacete/capacete-senna-frontal.jpg` | [Ayrton_Senna_1988_helmet_top-left_2015_Honda_F1_Exposition.jpg](https://commons.wikimedia.org/wiki/File:Ayrton_Senna_1988_helmet_top-left_2015_Honda_F1_Exposition.jpg) — capacete real de 1988 em exposição da Honda | CC BY-SA 3.0 |
+| `carros/toleman/toleman-tg184.jpg` e `senna-toleman-monaco-1984.jpg` | [Toleman_TG184_Senna_Donington_Grand_Prix_Collection.jpg](https://commons.wikimedia.org/wiki/File:Toleman_TG184_Senna_Donington_Grand_Prix_Collection.jpg) ou [Ayrton_Senna_Toleman_TG184_1984_British_GP_Brands_Hatch_001.jpg](https://commons.wikimedia.org/wiki/File:Ayrton_Senna_Toleman_TG184_1984_British_GP_Brands_Hatch_001.jpg) | CC BY-SA 3.0 / CC BY 2.0 |
+| `carros/lotus/lotus-97t-98t-99t.jpg` e `senna-lotus-98t.jpg` | [Lotus_97T_of_Ayrton_Senna,_1985.jpg](https://commons.wikimedia.org/wiki/File:Lotus_97T_of_Ayrton_Senna,_1985.jpg), [Lotus_98T_of_Ayrton_Senna,_1986.jpg](https://commons.wikimedia.org/wiki/File:Lotus_98T_of_Ayrton_Senna,_1986.jpg), [Lotus_99T_of_Ayrton_Senna,_1987_2.jpg](https://commons.wikimedia.org/wiki/File:Lotus_99T_of_Ayrton_Senna,_1987_2.jpg) | CC BY 2.0 |
+| `carros/mclaren/mclaren-mp4-4.jpg` e `senna-mclaren-mp4-4-1988.jpg` | [F1_maclaren_mp4-4_1988-a_senna.jpg](https://commons.wikimedia.org/wiki/File:F1_maclaren_mp4-4_1988-a_senna.jpg) | CC BY-SA 4.0 |
+| `carros/williams/williams-fw16.jpg` e `senna-williams-fw16-1994.jpg` | [Williams_FW16.jpg](https://commons.wikimedia.org/wiki/File:Williams_FW16.jpg) | CC BY-SA 2.5 |
+| `senna/instituto-ayrton-senna.jpg` e `instituto-ayrton-senna-2.jpg` | [Sessão_Solene_em_Comemoração_dos_25_anos_do_Instituto_Ayrton_Senna_01.jpg](https://commons.wikimedia.org/wiki/File:Sess%C3%A3o_Solene_em_Comemora%C3%A7%C3%A3o_dos_25_anos_do_Instituto_Ayrton_Senna_01.jpg) | verifique na página |
+
+Candidatas reais adicionais que apareceram na busca, mas eu não cruzei com um
+espaço específico do site — vale olhar se quiser mais opções ou substituir as
+de cima:
+
+- [Ayrton_Senna_1989_Belgian_GP_podium.jpg](https://commons.wikimedia.org/wiki/File:Ayrton_Senna_1989_Belgian_GP_podium.jpg) — CC BY 2.0, foto real do próprio Senna no pódio
+- [Ayrton_Senna_9_-_Cropped.jpg](https://commons.wikimedia.org/wiki/File:Ayrton_Senna_9_-_Cropped.jpg) — CC BY 2.0, retrato real
+- [McLaren_MP4_7A_of_Ayrton_Senna,_1992.jpg](https://commons.wikimedia.org/wiki/File:McLaren_MP4_7A_of_Ayrton_Senna,_1992.jpg)
+- [Senna's_McLaren_MP4-8.jpg](https://commons.wikimedia.org/wiki/File:Senna%27s_McLaren_MP4-8.jpg)
+
+**Não encontrei** fotos reais e livres de: infância/kart de Senna, F3 1983,
+comemoração em Interlagos 1991, ou dos troféus físicos — esses continuam como
+placeholder honesto até você achar ou enviar uma foto real (arquivo pessoal,
+banco de imagens licenciado, ou o próprio acervo do Instituto Ayrton Senna).
+
 ## Linha do tempo (`#historia`) — proporção 16:10
 
 | Arquivo | Descrição |

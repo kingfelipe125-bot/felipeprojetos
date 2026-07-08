@@ -95,6 +95,13 @@ h1,h2,h3,.font-display{font-family:'Anton', sans-serif; font-weight:400;}
 }
 .tl-photo-frame.has-photo::before, .car-photo-frame.has-photo::before, .helmet-photo-frame.has-photo::before{content:none;}
 
+.photo-credit{
+  position:absolute; right:6px; bottom:6px; z-index:2;
+  font-family:'JetBrains Mono', monospace; font-size:9.5px; letter-spacing:.02em;
+  color:rgba(255,255,255,.85); background:rgba(0,0,0,.55);
+  padding:3px 7px; border-radius:3px; line-height:1.3; max-width:calc(100% - 20px);
+}
+
 /* ---------- nav ---------- */
 #main-nav{
   position:fixed; top:0; left:0; right:0; z-index:100;
@@ -188,6 +195,58 @@ h1,h2,h3,.font-display{font-family:'Anton', sans-serif; font-weight:400;}
 .car-team{color:var(--gold); font-size:12px; letter-spacing:.2em;}
 .car-info h3{font-size:22px; margin:8px 0 10px; text-transform:uppercase;}
 .car-info p{color:var(--text-dim); font-size:15.5px;}
+
+/* ---------- car tech stats ---------- */
+.car-stats{display:flex; flex-wrap:wrap; gap:10px; margin-top:18px;}
+.stat-chip{
+  flex:1 1 auto; min-width:108px; background:var(--bg-panel-2); border:1px solid var(--line); border-radius:5px;
+  padding:10px 12px; display:flex; flex-direction:column; gap:2px;
+}
+.stat-num, .stat-text{
+  font-family:'JetBrains Mono', monospace; font-variant-numeric:tabular-nums;
+  color:var(--gold-bright); font-size:20px; font-weight:700; line-height:1.1;
+}
+.stat-suffix{font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--gold-bright); margin-left:2px;}
+.stat-label{font-size:11px; color:var(--text-faint); letter-spacing:.03em; margin-top:2px;}
+.stat-chip.static .stat-text{font-size:15px;}
+
+.tech-toggle{
+  margin-top:16px; background:none; border:none; color:var(--text-dim); cursor:pointer;
+  display:flex; align-items:center; gap:8px; font-family:'JetBrains Mono', monospace; font-size:12px;
+  letter-spacing:.1em; text-transform:uppercase; padding:0;
+}
+.tech-toggle:hover{color:var(--gold-bright);}
+.tech-toggle .chev{transition:transform .3s ease;}
+.tech-toggle[aria-expanded="true"] .chev{transform:rotate(180deg);}
+.tech-detail{max-height:0; overflow:hidden; transition:max-height .45s ease;}
+.tech-detail.open{max-height:420px;}
+.tech-detail ul{padding:14px 0 2px; display:flex; flex-direction:column; gap:11px;}
+.tech-detail li{list-style:none; color:var(--text-dim); font-size:14.5px; line-height:1.5;}
+.tech-detail li strong{display:block; color:var(--gold); font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; margin-bottom:3px;}
+
+/* ---------- technology era timeline ---------- */
+.tech-era-block{margin-top:110px;}
+.tech-era-track{position:relative; display:grid; grid-template-columns:repeat(4,1fr); gap:26px;}
+@media(max-width:900px){.tech-era-track{grid-template-columns:1fr; gap:0;}}
+.tech-era-line{position:absolute; top:9px; left:0; right:0; height:2px; background:var(--line);}
+@media(max-width:900px){.tech-era-line{top:0; bottom:0; left:9px; right:auto; width:2px; height:auto;}}
+.tech-era-line-fill{position:absolute; top:0; left:0; height:100%; width:0%; background:linear-gradient(90deg, var(--racing-red), var(--gold)); transition:width .15s linear;}
+@media(max-width:900px){.tech-era-line-fill{width:100%; height:0%; transition:height .15s linear;}}
+.tech-era-item{position:relative; padding-top:28px; opacity:0; transform:translateY(24px); transition:opacity .6s ease, transform .6s ease;}
+@media(max-width:900px){.tech-era-item{padding:0 0 46px 34px;}}
+.tech-era-item.in-view{opacity:1; transform:translateY(0);}
+.tech-era-dot{position:absolute; top:0; left:0; width:20px; height:20px; border-radius:50%; background:var(--bg); border:2px solid var(--line); transform:translateY(-1px);}
+@media(max-width:900px){.tech-era-dot{left:0; top:2px;}}
+.tech-era-item.in-view .tech-era-dot{border-color:var(--gold); box-shadow:0 0 12px rgba(232,177,58,.5);}
+.tech-era-year{display:block; color:var(--gold); font-size:12px; letter-spacing:.08em; margin-bottom:8px;}
+.tech-era-item h3{font-size:19px; text-transform:uppercase; margin-bottom:8px;}
+.tech-era-item p{color:var(--text-dim); font-size:14.5px; line-height:1.55;}
+.turbo-schematic{margin-top:16px; background:var(--bg-panel); border:1px solid var(--line); border-radius:6px; padding:8px;}
+.turbine-spin{animation:turbineSpin 1.4s linear infinite;}
+@keyframes turbineSpin{to{transform:rotate(360deg);}}
+.flow-in{stroke-dasharray:6 4; animation:flowMove 1s linear infinite;}
+.flow-out{stroke-dasharray:6 4; animation:flowMove 1s linear infinite;}
+@keyframes flowMove{to{stroke-dashoffset:-20;}}
 
 /* ---------- 360 viewer ---------- */
 .viewer-360-block{margin-top:110px;}
