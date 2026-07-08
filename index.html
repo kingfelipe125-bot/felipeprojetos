@@ -70,6 +70,8 @@ h1,h2,h3,.font-display{font-family:'Orbitron', sans-serif;}
 
 /* ---------- specular / metal helpers ---------- */
 .specular-highlight{fill:#ffffff; mix-blend-mode:screen; pointer-events:none;}
+.eye-on{filter:drop-shadow(0 0 4px var(--cyan)) drop-shadow(0 0 10px rgba(62,230,223,.55));}
+.flame-flicker{animation:flicker 1.5s ease-in-out infinite;}
 
 /* ---------- nav ---------- */
 nav{
@@ -83,10 +85,10 @@ nav{
 }
 nav.scrolled{border-bottom-color:var(--line); background:rgba(7,7,10,.85);}
 .logo{display:flex; align-items:center; gap:10px; font-family:'Orbitron'; font-weight:700; font-size:15px; letter-spacing:.12em; color:var(--text);}
-.logo .dot{width:12px; height:12px; border-radius:50%; background:radial-gradient(circle at 35% 35%, #fff, var(--cyan) 40%, var(--cyan-dim)); box-shadow:0 0 10px var(--cyan);} 
+.logo .dot{width:12px; height:12px; border-radius:50%; background:radial-gradient(circle at 35% 35%, #fff, var(--cyan) 40%, var(--cyan-dim)); box-shadow:0 0 10px var(--cyan);}
 .navlinks{display:flex; gap:34px; font-size:14px; letter-spacing:.08em; text-transform:uppercase;}
-.navlinks a{color:var(--text-dim); text-decoration:none; font-weight:600; transition:color .2s; position:relative;}
-.navlinks a:hover{color:var(--gold-bright);}
+.navlinks .navlink{background:none; border:none; padding:0; font:inherit; color:var(--text-dim); text-decoration:none; font-weight:600; transition:color .2s; position:relative; cursor:pointer; text-transform:uppercase; letter-spacing:.08em;}
+.navlinks .navlink:hover{color:var(--gold-bright);}
 @media(max-width:760px){.navlinks{display:none;}}
 
 /* ---------- hero ---------- */
@@ -141,18 +143,19 @@ nav.scrolled{border-bottom-color:var(--line); background:rgba(7,7,10,.85);}
   position:relative; aspect-ratio:1/1.15; background:radial-gradient(ellipse at 50% 40%, rgba(193,18,31,.10), transparent 65%), var(--bg-panel);
   border:1px solid var(--line); border-radius:6px; overflow:hidden;
 }
-.suitup-stage svg{width:100%; height:100%;}
+.suit-svg-holder{position:absolute; inset:0; padding:16px 10px 8px; display:flex; align-items:center; justify-content:center;}
+.suit-svg-holder svg{width:100%; height:100%;}
 .suit-plate{opacity:0; transform:translateY(-46px) scale(.88) rotate(-4deg); transform-origin:center; animation:none;}
 .suitup-stage.armed .suit-plate{animation:plateIn .6s cubic-bezier(.17,.85,.2,1.15) forwards;}
-.suitup-stage.armed .p1{animation-delay:.05s;}
-.suitup-stage.armed .p2{animation-delay:.15s;}
-.suitup-stage.armed .p3{animation-delay:.22s;}
-.suitup-stage.armed .p4{animation-delay:.30s;}
-.suitup-stage.armed .p5{animation-delay:.38s;}
-.suitup-stage.armed .p6{animation-delay:.46s;}
-.suitup-stage.armed .p7{animation-delay:.52s;}
-.suitup-stage.armed .p8{animation-delay:.58s;}
-.suitup-stage.armed .eye-glow{animation:eyeGlow .5s ease .78s forwards;}
+.suitup-stage.armed .p1{animation-delay:.62s;}
+.suitup-stage.armed .p2{animation-delay:.34s;}
+.suitup-stage.armed .p3{animation-delay:.40s;}
+.suitup-stage.armed .p4{animation-delay:.22s;}
+.suitup-stage.armed .p5{animation-delay:.46s;}
+.suitup-stage.armed .p6{animation-delay:.52s;}
+.suitup-stage.armed .p7{animation-delay:.05s;}
+.suitup-stage.armed .p8{animation-delay:.12s;}
+.suitup-stage.armed .eye-glow{animation:eyeGlow .5s ease .95s forwards;}
 @keyframes plateIn{
   0%{opacity:0; transform:translateY(-46px) scale(.88) rotate(-4deg);}
   70%{opacity:1; transform:translateY(2px) scale(1.015) rotate(.6deg);}
@@ -160,11 +163,11 @@ nav.scrolled{border-bottom-color:var(--line); background:rgba(7,7,10,.85);}
 }
 @keyframes eyeGlow{0%{opacity:0;}60%{opacity:.4;}80%{opacity:.85;}100%{opacity:1; filter:drop-shadow(0 0 6px var(--cyan)) drop-shadow(0 0 14px var(--cyan));}}
 .stage-caption{position:absolute; left:14px; bottom:12px; font-family:'JetBrains Mono'; font-size:11px; color:var(--text-faint); letter-spacing:.1em;}
-.stage-btn{position:absolute; top:12px; right:12px; background:transparent; border:1px solid var(--line); color:var(--text-dim); font-family:'JetBrains Mono'; font-size:10.5px; letter-spacing:.12em; padding:7px 12px; cursor:pointer; text-transform:uppercase; transition:all .2s;}
+.stage-btn{position:absolute; top:12px; right:12px; background:transparent; border:1px solid var(--line); color:var(--text-dim); font-family:'JetBrains Mono'; font-size:10.5px; letter-spacing:.12em; padding:7px 12px; cursor:pointer; text-transform:uppercase; transition:all .2s; z-index:2;}
 .stage-btn:hover{border-color:var(--gold); color:var(--gold-bright);}
 
 .shine-sweep{opacity:0; transform:translateX(-20px) skewX(-15deg);}
-.suitup-stage.armed .shine-sweep{animation:shineSweep 5s ease-in-out 1.1s infinite;}
+.suitup-stage.armed .shine-sweep{animation:shineSweep 5s ease-in-out 1.3s infinite;}
 @keyframes shineSweep{
   0%{transform:translateX(-20px) skewX(-15deg); opacity:0;}
   4%{opacity:.6;}
@@ -172,9 +175,830 @@ nav.scrolled{border-bottom-color:var(--line); background:rgba(7,7,10,.85);}
   100%{transform:translateX(70px) skewX(-15deg); opacity:0;}
 }
 .thruster-flame{opacity:0; transform-origin:center;}
-.suitup-stage.armed .thruster-flame{animation:thrusterPulse 1.15s ease-in-out .95s infinite;}
+.suitup-stage.armed .thruster-flame{animation:thrusterPulse 1.15s ease-in-out 1.1s infinite;}
 @keyframes thrusterPulse{0%,100%{opacity:.45; transform:scaleY(.75);}50%{opacity:1; transform:scaleY(1.35);}}
 .reactor-pulse-chest{animation:pulse 2.6s ease-in-out infinite;}
 
 /* ---------- armors ---------- */
-.armor-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:var(--line); border:1px solid var(--line);} (truncated for brevity)
+.armor-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:var(--line); border:1px solid var(--line);}
+@media(max-width:860px){.armor-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.armor-grid{grid-template-columns:1fr;}}
+.armor-card{
+  background:var(--bg-panel); padding:26px 22px 22px; cursor:pointer; position:relative;
+  transition:background .2s;
+}
+.armor-card:hover, .armor-card.active{background:var(--bg-panel-2);}
+.armor-card .mark-id{font-family:'JetBrains Mono'; font-size:11px; color:var(--text-faint); letter-spacing:.15em;}
+.armor-card .mark-name{font-family:'Orbitron'; font-size:16px; font-weight:700; margin:6px 0 14px; text-transform:uppercase; letter-spacing:.02em;}
+.armor-card .icon-box{width:100%; aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;}
+.armor-card svg{width:78%; height:78%; transition:filter .25s;}
+.armor-card:hover svg{filter:brightness(1.15);}
+.armor-card.active .mark-name{color:var(--gold-bright);}
+.armor-card .thruster{opacity:.85; animation:flicker 1.6s ease-in-out infinite;}
+@keyframes flicker{0%,100%{opacity:.6;}50%{opacity:1;}}
+
+.armor-detail{
+  margin-top:2px; border:1px solid var(--line); border-top:none; background:var(--bg-panel);
+  display:grid; grid-template-columns:.85fr 1.15fr; overflow:hidden;
+  max-height:0; opacity:0; transition:max-height .45s ease, opacity .35s ease;
+}
+.armor-detail.open{max-height:1100px; opacity:1;}
+@media(max-width:800px){.armor-detail{grid-template-columns:1fr;}}
+.armor-detail-visual{padding:36px 24px; display:flex; align-items:center; justify-content:center; border-right:1px solid var(--line); background:radial-gradient(circle at 50% 40%, rgba(240,165,0,.06), transparent 65%);}
+@media(max-width:800px){.armor-detail-visual{border-right:none; border-bottom:1px solid var(--line);}}
+.armor-detail-visual svg{height:340px; width:auto; max-width:100%;}
+.armor-detail-info{padding:36px 34px;}
+.armor-detail-info .desig{font-family:'JetBrains Mono'; font-size:11px; letter-spacing:.18em; color:var(--gold); text-transform:uppercase; margin-bottom:6px;}
+.armor-detail-info h4{font-family:'Orbitron'; font-size:22px; margin-bottom:14px;}
+.armor-detail-info>p{color:var(--text-dim); font-size:16.5px; margin-bottom:20px;}
+.part-list{list-style:none; display:flex; flex-direction:column; gap:12px;}
+.part-list li{display:flex; gap:14px; padding:12px 0; border-top:1px solid var(--line);}
+.part-list li:first-child{border-top:none;}
+.part-tag{font-family:'JetBrains Mono'; font-size:11px; color:var(--cyan); min-width:120px; letter-spacing:.05em; padding-top:1px;}
+.part-desc{color:var(--text-dim); font-size:15.5px; flex:1;}
+.part-desc strong{color:var(--text); font-weight:700;}
+
+/* ---------- jarvis ---------- */
+.jarvis-section{background:linear-gradient(180deg, var(--bg) 0%, #0a0c10 100%); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+.jarvis-grid{display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center;}
+@media(max-width:900px){.jarvis-grid{grid-template-columns:1fr;}}
+.terminal{
+  background:#0a0d0f; border:1px solid var(--cyan-dim); border-radius:6px; padding:24px 26px; font-family:'JetBrains Mono'; font-size:14.5px;
+  box-shadow:0 0 40px rgba(62,230,223,.06), inset 0 0 60px rgba(62,230,223,.03);
+  min-height:260px;
+}
+.terminal .bar{display:flex; gap:6px; margin-bottom:16px;}
+.terminal .bar span{width:9px; height:9px; border-radius:50%; background:var(--line);}
+.term-line{color:var(--cyan); margin-bottom:10px; opacity:0; white-space:pre-wrap;}
+.term-line.show{opacity:1;}
+.term-line .caret{display:inline-block; width:8px; height:14px; background:var(--cyan); margin-left:2px; vertical-align:-2px; animation:blink 1s steps(1) infinite;}
+@keyframes blink{50%{opacity:0;}}
+.term-prompt{color:var(--gold);}
+
+.hud-ring-wrap{position:relative; width:100%; max-width:340px; aspect-ratio:1/1; margin:0 auto;}
+.hud-ring-wrap svg{width:100%; height:100%;}
+.hud-ring-wrap .sweep{animation:spin 5s linear infinite; transform-origin:100px 100px;}
+.hud-ring-wrap .ring-slow{animation:spin 30s linear infinite;}
+.hud-ring-wrap .ring-rev{animation:spin 22s linear infinite reverse;}
+.jarvis-text p{color:var(--text-dim); font-size:18.5px; margin-bottom:16px; font-weight:500;}
+.jarvis-facts{display:flex; flex-direction:column; gap:0; margin-top:26px;}
+.jarvis-fact{display:flex; gap:16px; padding:14px 0; border-top:1px solid var(--line);}
+.jarvis-fact .ic{width:8px; height:8px; margin-top:8px; background:var(--cyan); box-shadow:0 0 8px var(--cyan); flex-shrink:0;}
+.jarvis-fact p{margin:0; color:var(--text-dim); font-size:16px;}
+.jarvis-fact strong{color:var(--text);}
+
+/* ---------- nanotech ---------- */
+.nano-grid{display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center;}
+@media(max-width:900px){.nano-grid{grid-template-columns:1fr; }}
+.nano-canvas-wrap{position:relative; aspect-ratio:1/1; border:1px solid var(--line); background:var(--bg-panel); overflow:hidden; cursor:pointer;}
+#nanoCanvas{width:100%; height:100%; display:block;}
+.nano-hint{position:absolute; left:14px; bottom:12px; font-family:'JetBrains Mono'; font-size:11px; color:var(--text-faint); letter-spacing:.1em; pointer-events:none;}
+.nano-cards{display:flex; flex-direction:column; gap:0;}
+.nano-card{padding:20px 0; border-top:1px solid var(--line);}
+.nano-card:first-child{border-top:none;}
+.nano-card .n-title{font-family:'Orbitron'; font-size:14px; letter-spacing:.05em; color:var(--gold-bright); margin-bottom:8px; text-transform:uppercase;}
+.nano-card p{color:var(--text-dim); font-size:16px;}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line); padding:50px 0 40px; text-align:center;}
+footer p{font-family:'JetBrains Mono'; font-size:11.5px; color:var(--text-faint); letter-spacing:.08em;}
+footer .fdot{color:var(--gold);}
+</style>
+</head>
+<body>
+
+<!-- Global reusable SVG defs: gradients & filters used across the page -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="dropShadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.4" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+    <filter id="softGlow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="3.2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <linearGradient id="suitRed" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5c0a10"/>
+      <stop offset="42%" stop-color="#c1121f"/>
+      <stop offset="58%" stop-color="#ff7a6a"/>
+      <stop offset="100%" stop-color="#8f0d16"/>
+    </linearGradient>
+    <linearGradient id="suitRedDeep" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#40060c"/>
+      <stop offset="38%" stop-color="#8f0d16"/>
+      <stop offset="55%" stop-color="#e8584a"/>
+      <stop offset="100%" stop-color="#5c0a10"/>
+    </linearGradient>
+    <linearGradient id="suitGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7a5000"/>
+      <stop offset="42%" stop-color="#f0a500"/>
+      <stop offset="62%" stop-color="#ffe6a0"/>
+      <stop offset="100%" stop-color="#c17e00"/>
+    </linearGradient>
+    <linearGradient id="suitDark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#07070a"/>
+      <stop offset="42%" stop-color="#1c1c24"/>
+      <stop offset="62%" stop-color="#4c4c57"/>
+      <stop offset="100%" stop-color="#0e0e12"/>
+    </linearGradient>
+    <radialGradient id="reactorGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f4fffe"/>
+      <stop offset="35%" stop-color="#3ee6df"/>
+      <stop offset="100%" stop-color="#0c2f2d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="flameGrad" cx="50%" cy="0%" r="100%">
+      <stop offset="0%" stop-color="#eafffe"/>
+      <stop offset="35%" stop-color="#3ee6df"/>
+      <stop offset="72%" stop-color="#f0a500"/>
+      <stop offset="100%" stop-color="#c1121f" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="shineGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity=".6"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<div class="scan-overlay"></div>
+
+<nav id="nav">
+  <div class="logo"><span class="dot"></span> S.I. // ARQUIVO DE ARMADURA</div>
+  <div class="navlinks">
+    <button type="button" class="navlink" data-target="sobre">Sobre</button>
+    <button type="button" class="navlink" data-target="armaduras">Armaduras</button>
+    <button type="button" class="navlink" data-target="jarvis">J.A.R.V.I.S.</button>
+    <button type="button" class="navlink" data-target="nanotech">Nanotecnologia</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="reactor-wrap" id="reactorBtn" title="Clique para ativar">
+    <svg class="reactor-rings" viewBox="0 0 200 200">
+      <circle class="ring r3" cx="100" cy="100" r="96"/>
+      <circle class="ring r1" cx="100" cy="100" r="86"/>
+      <circle class="ring r2" cx="100" cy="100" r="70"/>
+    </svg>
+    <div class="reactor-core">
+      <svg viewBox="0 0 100 100" class="glow" filter="url(#softGlow)">
+        <polygon points="50,8 61,38 92,38 66,57 76,88 50,68 24,88 34,57 8,38 39,38" fill="none" stroke="#3ee6df" stroke-width="2.4" stroke-linejoin="round"/>
+        <circle cx="50" cy="50" r="16" fill="#0a0d0f" stroke="#3ee6df" stroke-width="2.5"/>
+        <circle cx="50" cy="50" r="6.5" fill="url(#reactorGlow)"/>
+      </svg>
+    </div>
+  </div>
+  <h1 class="hero-title">HOMEM<br>DE <span class="accent">FERRO</span></h1>
+  <p class="hero-sub">Um arquivo técnico sobre o herói blindado: a armadura, a inteligência artificial que o acompanha e a nanotecnologia que redefiniu o que uma armadura pode ser.</p>
+  <p class="hero-tag">Stark Industries — Divisão de Sistemas Avançados</p>
+  <div class="scroll-cue"><span>ROLAR</span><span class="bar"></span></div>
+</header>
+
+<!-- SOBRE -->
+<section class="section" id="sobre">
+  <div class="wrap about-grid">
+    <div class="about-text">
+      <div class="eyebrow">Designação</div>
+      <h2 style="font-size:34px; font-weight:900; margin:14px 0 20px; text-transform:uppercase;">O homem dentro da máquina</h2>
+      <p>O Homem de Ferro nasceu da mente de <strong>Tony Stark</strong>, engenheiro e industrial à frente da Stark Industries. Ferido gravemente durante um conflito armado e mantido em cativeiro, Stark construiu em segredo a primeira armadura — improvisada, pesada, mas funcional o bastante para garantir sua fuga.</p>
+      <p>O que começou como um dispositivo de sobrevivência se tornou um projeto contínuo de engenharia: dezenas de gerações de armadura, cada uma corrigindo falhas da anterior e testando novos materiais, fontes de energia e sistemas de suporte à vida.</p>
+      <p>No centro de cada versão está o mesmo princípio: um <strong>reator arc</strong> em miniatura, alimentando propulsão, blindagem e um arsenal de armas não-letais e letais, tudo comandado por uma interface homem-máquina cada vez mais próxima de um segundo corpo.</p>
+      <div class="stat-row">
+        <div class="stat"><div class="num">85+</div><div class="lbl">Versões de armadura</div></div>
+        <div class="stat"><div class="num">Mark I</div><div class="lbl">Primeiro protótipo</div></div>
+        <div class="stat"><div class="num">Nano</div><div class="lbl">Geração mais recente</div></div>
+      </div>
+    </div>
+    <div class="suitup-stage corner-frame" id="suitStage">
+      <div class="suit-svg-holder" id="suitHolder"></div>
+      <div class="stage-caption mono">SEQUÊNCIA DE ACOPLAMENTO // MANUAL</div>
+      <button class="stage-btn" id="suitBtn">ACOPLAR</button>
+    </div>
+  </div>
+</section>
+
+<!-- ARMADURAS -->
+<section class="section" id="armaduras" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Catálogo</div>
+      <h2>As Armaduras</h2>
+      <p>Seis marcos que ilustram a evolução da armadura — do metal bruto de sucata à nanotecnologia programável. Clique em cada uma para abrir a ficha técnica.</p>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="armor-grid" id="armorGrid"></div>
+    <div class="armor-detail" id="armorDetail"></div>
+  </div>
+</section>
+
+<!-- JARVIS -->
+<section class="section jarvis-section" id="jarvis">
+  <div class="wrap jarvis-grid">
+    <div class="jarvis-text">
+      <div class="eyebrow">Inteligência artificial</div>
+      <h2 style="font-size:34px; font-weight:900; margin:14px 0 20px; text-transform:uppercase;">J.A.R.V.I.S.</h2>
+      <p><strong style="color:var(--text)">Just A Rather Very Intelligent System.</strong> Muito antes de ser uma armadura, o projeto era uma voz: um assistente artificial construído para gerenciar o laboratório, a mansão e, eventualmente, cada centímetro da armadura em tempo real.</p>
+      <p>JARVIS interpreta comandos de voz, monitora sinais vitais do piloto, calcula trajetórias de voo, ajusta a mira dos repulsores e conduz diagnósticos completos do traje em frações de segundo — tudo isso enquanto conversa com um tom de ironia impecavelmente educada.</p>
+      <div class="jarvis-facts">
+        <div class="jarvis-fact"><div class="ic"></div><p><strong>Origem:</strong> criado como assistente doméstico e de laboratório antes de ser integrado à armadura.</p></div>
+        <div class="jarvis-fact"><div class="ic"></div><p><strong>Função em combate:</strong> navegação, mira assistida, análise de ameaças e comunicação por voz em tempo real.</p></div>
+        <div class="jarvis-fact"><div class="ic"></div><p><strong>Interface:</strong> projeções de realidade aumentada dentro do capacete, exibindo dados vitais, mapas e alvos.</p></div>
+        <div class="jarvis-fact"><div class="ic"></div><p><strong>Legado:</strong> seu núcleo segue evoluindo em versões posteriores do sistema, muito além da armadura original.</p></div>
+      </div>
+    </div>
+    <div>
+      <div class="hud-ring-wrap corner-frame">
+        <svg viewBox="0 0 200 200">
+          <circle class="ring-slow" cx="100" cy="100" r="92" fill="none" stroke="#164b49" stroke-width="1" stroke-dasharray="1 6"/>
+          <circle class="ring-rev" cx="100" cy="100" r="78" fill="none" stroke="#164b49" stroke-width="1.4" stroke-dasharray="10 5"/>
+          <circle cx="100" cy="100" r="60" fill="none" stroke="#3ee6df" stroke-width="1" opacity=".5"/>
+          <g class="sweep">
+            <path d="M100 100 L100 8 A92 92 0 0 1 155 30 Z" fill="url(#sweepGrad)"/>
+          </g>
+          <defs>
+            <linearGradient id="sweepGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#3ee6df" stop-opacity=".5"/>
+              <stop offset="100%" stop-color="#3ee6df" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <text x="100" y="96" text-anchor="middle" fill="#3ee6df" font-family="JetBrains Mono" font-size="11" letter-spacing="2">SISTEMA</text>
+          <text x="100" y="112" text-anchor="middle" fill="#e9e9ee" font-family="Orbitron" font-size="14" font-weight="700">ONLINE</text>
+        </svg>
+      </div>
+      <div class="terminal" id="terminal" style="margin-top:26px;">
+        <div class="bar"><span></span><span></span><span></span></div>
+        <div id="termLines"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NANOTECH -->
+<section class="section" id="nanotech">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Materiais avançados</div>
+      <h2>Nanotecnologia</h2>
+      <p>A geração mais recente de armadura abandona as placas rígidas em favor de bilhões de nano-partículas — capazes de se reorganizar em tempo real. Clique na cena para acoplar ou dispersar o enxame.</p>
+    </div>
+  </div>
+  <div class="wrap nano-grid">
+    <div class="nano-canvas-wrap corner-frame" id="nanoWrap">
+      <canvas id="nanoCanvas"></canvas>
+      <div class="nano-hint mono">ENXAME NANO // CLIQUE PARA ACOPLAR</div>
+    </div>
+    <div class="nano-cards">
+      <div class="nano-card">
+        <div class="n-title">Repositório</div>
+        <p>Toda a armadura fica compactada em um pequeno disco alojado sobre o peito, pronto para se espalhar sobre o corpo do piloto em segundos.</p>
+      </div>
+      <div class="nano-card">
+        <div class="n-title">Montagem sob demanda</div>
+        <p>As partículas se deslocam e se encaixam formando placas, articulações e o capacete — sempre na configuração exata que o momento exige.</p>
+      </div>
+      <div class="nano-card">
+        <div class="n-title">Auto-reparo</div>
+        <p>Danos localizados são isolados e reconstruídos com partículas realocadas de outras regiões da armadura, sem precisar de manutenção externa.</p>
+      </div>
+      <div class="nano-card">
+        <div class="n-title">Reconfiguração de armas</div>
+        <p>A mesma massa de partículas pode se redistribuir para formar lâminas, escudos ou canhões improvisados, adaptando o arsenal ao combate.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><span class="fdot">◆</span> ARQUIVO GERADO PARA FINS INFORMATIVOS E DE FÃ &nbsp;·&nbsp; STARK INDUSTRIES — DIVISÃO DE SISTEMAS AVANÇADOS <span class="fdot">◆</span></p>
+</footer>
+
+<script>
+/* nav scroll state */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', ()=> nav.classList.toggle('scrolled', window.scrollY > 20));
+
+/* navegação por botões (sem href), evitando qualquer tentativa de navegação
+   que poderia ser interpretada como abrir um site externo */
+document.querySelectorAll('.navlink').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const target = document.getElementById(btn.dataset.target);
+    if(target){
+      target.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  });
+});
+
+/* reactor click pulse */
+const reactorBtn = document.getElementById('reactorBtn');
+reactorBtn.addEventListener('click', ()=>{
+  reactorBtn.animate([{transform:'scale(1)'},{transform:'scale(1.12)'},{transform:'scale(1)'}], {duration:500, easing:'ease-out'});
+});
+
+/* ---------------- color shading helper ---------------- */
+function shade(hex, percent){
+  hex = hex.replace('#','');
+  if(hex.length === 3) hex = hex.split('').map(c=>c+c).join('');
+  const num = parseInt(hex,16);
+  let r = (num >> 16) + Math.round(255*(percent/100));
+  let g = ((num >> 8) & 0x00FF) + Math.round(255*(percent/100));
+  let b = (num & 0x0000FF) + Math.round(255*(percent/100));
+  r = Math.max(Math.min(255,r),0);
+  g = Math.max(Math.min(255,g),0);
+  b = Math.max(Math.min(255,b),0);
+  return '#' + (0x1000000 + r*0x10000 + g*0x100 + b).toString(16).slice(1);
+}
+
+/* ---------------- armadura oficial de corpo inteiro (SVG gerado) ----------------
+   Gera a silhueta clássica do Homem de Ferro: capacete com placa facial dourada,
+   olhos acesos, reator arc no peito, ombreiras, repulsores nas palmas e
+   propulsores nas botas. `animated:true` adiciona as classes da sequência de
+   acoplamento usada na seção Sobre. */
+function armorBody({primary, secondary, uid, animated=false, guides=false}){
+  const pDark = shade(primary,-48), pLight = shade(primary,40), pMid = shade(primary,-14);
+  const dDark = shade(primary,-62), dBase = shade(primary,-28), dLight = shade(primary,12);
+  const sDark = shade(secondary,-42), sLight = shade(secondary,46), sMid = shade(secondary,-14);
+  const plate = n => animated ? `class="suit-plate ${n}"` : '';
+  const eyeAttr = animated ? 'class="eye-glow" opacity="0"' : 'class="eye-on"';
+  const flameAttr = animated ? 'class="thruster-flame"' : 'class="flame-flicker"';
+  const P = `url(#bp${uid})`, D = `url(#bd${uid})`, S = `url(#bs${uid})`;
+  return `
+  <svg viewBox="0 0 200 288">
+    <defs>
+      <linearGradient id="bp${uid}" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="${pDark}"/><stop offset="42%" stop-color="${primary}"/>
+        <stop offset="58%" stop-color="${pLight}"/><stop offset="100%" stop-color="${pMid}"/>
+      </linearGradient>
+      <linearGradient id="bd${uid}" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="${dDark}"/><stop offset="40%" stop-color="${dBase}"/>
+        <stop offset="58%" stop-color="${dLight}"/><stop offset="100%" stop-color="${dDark}"/>
+      </linearGradient>
+      <linearGradient id="bs${uid}" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="${sDark}"/><stop offset="42%" stop-color="${secondary}"/>
+        <stop offset="62%" stop-color="${sLight}"/><stop offset="100%" stop-color="${sMid}"/>
+      </linearGradient>
+      <clipPath id="chestClip${uid}"><path d="M78 78 L122 78 L126 104 Q124 116 112 120 L88 120 Q76 116 74 104 Z"/></clipPath>
+    </defs>
+
+    ${guides ? '<line x1="100" y1="8" x2="100" y2="282" stroke="#26262f" stroke-width="1" stroke-dasharray="3 5"/>' : ''}
+
+    <!-- pernas -->
+    <g ${plate('p7')}>
+      <path d="M87 169 L99 171 L97 205 L85 202 Z" fill="${P}" stroke="${pDark}" stroke-width="1.1" filter="url(#dropShadow)"/>
+      <path d="M92.5 173 L91.5 202" stroke="${pDark}" stroke-width=".9" opacity=".55" fill="none"/>
+      <path d="M85.5 174 L89 175 L88 189 L84.3 186.5 Z" fill="${S}" opacity=".9"/>
+      <path d="M84.5 205 L97 207 L96 217 L84.5 215 Z" fill="${S}" stroke="${sDark}" stroke-width="1"/>
+      <path d="M84.5 217 L96 219 L94.8 247 L84.5 247 Z" fill="${D}" stroke="${dDark}" stroke-width="1"/>
+      <path d="M89.5 219.5 L89 247" stroke="${sMid}" stroke-width=".9" opacity=".5" fill="none"/>
+      <path d="M83 247 L96 247 L99 257 Q99.5 260.5 95.5 260.5 L81.5 260.5 Q78.5 260 79.2 255 Z" fill="${P}" stroke="${pDark}" stroke-width="1.1"/>
+      <path d="M80 258 L98.5 258" stroke="${sMid}" stroke-width="1.2" opacity=".8" fill="none"/>
+      <ellipse ${flameAttr} cx="89" cy="270" rx="5.5" ry="11" fill="url(#flameGrad)" filter="url(#softGlow)"/>
+    </g>
+    <g ${plate('p8')}>
+      <path d="M113 169 L101 171 L103 205 L115 202 Z" fill="${P}" stroke="${pDark}" stroke-width="1.1" filter="url(#dropShadow)"/>
+      <path d="M107.5 173 L108.5 202" stroke="${pDark}" stroke-width=".9" opacity=".55" fill="none"/>
+      <path d="M114.5 174 L111 175 L112 189 L115.7 186.5 Z" fill="${S}" opacity=".9"/>
+      <path d="M115.5 205 L103 207 L104 217 L115.5 215 Z" fill="${S}" stroke="${sDark}" stroke-width="1"/>
+      <path d="M115.5 217 L104 219 L105.2 247 L115.5 247 Z" fill="${D}" stroke="${dDark}" stroke-width="1"/>
+      <path d="M110.5 219.5 L111 247" stroke="${sMid}" stroke-width=".9" opacity=".5" fill="none"/>
+      <path d="M117 247 L104 247 L101 257 Q100.5 260.5 104.5 260.5 L118.5 260.5 Q121.5 260 120.8 255 Z" fill="${P}" stroke="${pDark}" stroke-width="1.1"/>
+      <path d="M120 258 L101.5 258" stroke="${sMid}" stroke-width="1.2" opacity=".8" fill="none"/>
+      <ellipse ${flameAttr} cx="111" cy="270" rx="5.5" ry="11" fill="url(#flameGrad)" filter="url(#softGlow)"/>
+    </g>
+
+    <!-- torso: gola, peitoral, reator arc, abdômen, cinto e quadril -->
+    <g ${plate('p4')}>
+      <path d="M84 72 L116 72 L120 79 L80 79 Z" fill="${S}" stroke="${sDark}" stroke-width="1"/>
+      <path d="M78 78 L122 78 L126 104 Q124 116 112 120 L88 120 Q76 116 74 104 Z" fill="${P}" stroke="${pDark}" stroke-width="1.3" filter="url(#dropShadow)"/>
+      <path d="M92 79 L108 79 L106.5 101 L93.5 101 Z" fill="${S}" stroke="${sDark}" stroke-width="1"/>
+      <path d="M78 91 Q87 97 92 94 M122 91 Q113 97 108 94" fill="none" stroke="${pDark}" stroke-width="1" opacity=".55"/>
+      <ellipse class="specular-highlight" cx="88" cy="84" rx="9" ry="4.5" opacity=".16"/>
+      <circle cx="100" cy="90" r="7.6" fill="#0a0d0f" stroke="#3ee6df" stroke-width="2"/>
+      <circle class="reactor-pulse-chest" cx="100" cy="90" r="3" fill="url(#reactorGlow)"/>
+      ${animated ? `<g clip-path="url(#chestClip${uid})"><rect class="shine-sweep" x="66" y="70" width="15" height="60" fill="url(#shineGrad)"/></g>` : ''}
+      <path d="M88 120 L112 120 L110 133 L108.5 145 L91.5 145 L90 133 Z" fill="${D}" stroke="${dDark}" stroke-width="1"/>
+      <path d="M89.2 127 L110.8 127 M90 134 L110 134 M90.7 140 L109.3 140" stroke="${sMid}" stroke-width=".8" opacity=".5" fill="none"/>
+      <path d="M90 145 L110 145 L113 153 L87 153 Z" fill="${S}" stroke="${sDark}" stroke-width="1"/>
+      <path d="M90 153 L110 153 L112 165 Q106 172 100 172 Q94 172 88 165 Z" fill="${P}" stroke="${pDark}" stroke-width="1.1"/>
+      <path d="M86 153 L90 153 L87.5 163 L83.5 158 Z M114 153 L110 153 L112.5 163 L116.5 158 Z" fill="${S}" stroke="${sDark}" stroke-width=".8"/>
+    </g>
+
+    <!-- ombreiras -->
+    <g ${plate('p2')}>
+      <path d="M80 78 L64 82 Q55 88 57 99 L61 106 L74 102 L79 90 Z" fill="${P}" stroke="${pDark}" stroke-width="1.1" filter="url(#dropShadow)"/>
+      <path d="M63 86 L60 97" stroke="${sMid}" stroke-width="1" opacity=".5" fill="none"/>
+      <ellipse class="specular-highlight" cx="66" cy="87" rx="5" ry="2.6" opacity=".2"/>
+    </g>
+    <g ${plate('p3')}>
+      <path d="M120 78 L136 82 Q145 88 143 99 L139 106 L126 102 L121 90 Z" fill="${P}" stroke="${pDark}" stroke-width="1.1" filter="url(#dropShadow)"/>
+      <path d="M137 86 L140 97" stroke="${sMid}" stroke-width="1" opacity=".5" fill="none"/>
+      <ellipse class="specular-highlight" cx="134" cy="87" rx="5" ry="2.6" opacity=".2"/>
+    </g>
+
+    <!-- braços: bíceps, cotovelo, manopla e repulsor na palma -->
+    <g ${plate('p5')}>
+      <path d="M59 104 L73 103 L71 126 L58 124 Z" fill="${S}" stroke="${sDark}" stroke-width="1" filter="url(#dropShadow)"/>
+      <circle cx="64.5" cy="128" r="3.4" fill="url(#suitDark)"/>
+      <path d="M56 128 L71 130 L68 155 Q67 161 61.5 161 Q55.5 160.5 55 155 Z" fill="${P}" stroke="${pDark}" stroke-width="1.1" filter="url(#dropShadow)"/>
+      <path d="M63 131 L62 158" stroke="${pDark}" stroke-width=".9" opacity=".55" fill="none"/>
+      <path d="M56.5 161 L67 162 L66 173.5 Q63.5 176.5 60.5 176 L57.5 173 Z" fill="${S}" stroke="${sDark}" stroke-width="1"/>
+      <circle cx="61.5" cy="169" r="3.8" fill="#0a0d0f" stroke="#3ee6df" stroke-width="1.4"/>
+      <circle cx="61.5" cy="169" r="1.6" fill="url(#reactorGlow)"/>
+    </g>
+    <g ${plate('p6')}>
+      <path d="M141 104 L127 103 L129 126 L142 124 Z" fill="${S}" stroke="${sDark}" stroke-width="1" filter="url(#dropShadow)"/>
+      <circle cx="135.5" cy="128" r="3.4" fill="url(#suitDark)"/>
+      <path d="M144 128 L129 130 L132 155 Q133 161 138.5 161 Q144.5 160.5 145 155 Z" fill="${P}" stroke="${pDark}" stroke-width="1.1" filter="url(#dropShadow)"/>
+      <path d="M137 131 L138 158" stroke="${pDark}" stroke-width=".9" opacity=".55" fill="none"/>
+      <path d="M143.5 161 L133 162 L134 173.5 Q136.5 176.5 139.5 176 L142.5 173 Z" fill="${S}" stroke="${sDark}" stroke-width="1"/>
+      <circle cx="138.5" cy="169" r="3.8" fill="#0a0d0f" stroke="#3ee6df" stroke-width="1.4"/>
+      <circle cx="138.5" cy="169" r="1.6" fill="url(#reactorGlow)"/>
+    </g>
+
+    <!-- capacete com placa facial -->
+    <g ${plate('p1')}>
+      <path d="M93 64 L107 64 L106 72 L94 72 Z" fill="url(#suitDark)"/>
+      <path d="M80 38 Q80 15 100 13 Q120 15 120 38 L118 54 Q116 63 107 65 L93 65 Q84 63 82 54 Z" fill="${P}" stroke="${pDark}" stroke-width="1.2" filter="url(#dropShadow)"/>
+      <circle cx="81.5" cy="45" r="2.6" fill="${S}"/><circle cx="118.5" cy="45" r="2.6" fill="${S}"/>
+      <path d="M87 32 L113 32 L115.5 44 Q113 57.5 100 61.5 Q87 57.5 84.5 44 Z" fill="${S}" stroke="${sDark}" stroke-width="1"/>
+      <path d="M87 32 Q100 27 113 32" fill="none" stroke="${sDark}" stroke-width="1" opacity=".55"/>
+      <path d="M92 49 L91.6 53 M108 49 L108.4 53 M97 56.5 L103 56.5" stroke="${sDark}" stroke-width=".8" opacity=".4" fill="none"/>
+      <ellipse class="specular-highlight" cx="92" cy="21.5" rx="8" ry="3.6" opacity=".25"/>
+      <rect x="88.5" y="40.5" width="8.4" height="3.8" rx="1.7" fill="#dffcff" ${eyeAttr}/>
+      <rect x="103.1" y="40.5" width="8.4" height="3.8" rx="1.7" fill="#dffcff" ${eyeAttr}/>
+    </g>
+  </svg>`;
+}
+
+/* estágio de acoplamento da seção Sobre — armadura oficial vermelho e dourado */
+document.getElementById('suitHolder').innerHTML =
+  armorBody({primary:'#c1121f', secondary:'#f0a500', uid:'stage', animated:true, guides:true});
+
+/* suit-up sequence */
+const stage = document.getElementById('suitStage');
+const suitBtn = document.getElementById('suitBtn');
+let armed = false;
+function toggleSuit(){
+  armed = !armed;
+  stage.classList.toggle('armed', armed);
+  suitBtn.textContent = armed ? 'DESACOPLAR' : 'ACOPLAR';
+}
+suitBtn.addEventListener('click', toggleSuit);
+const suitObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting && !armed){ toggleSuit(); suitObserver.disconnect(); } });
+},{threshold:.5});
+suitObserver.observe(stage);
+
+/* ---------------- armor data ---------------- */
+let gradUid = 0;
+const helmetIcon = (accent, extra='') => {
+  gradUid++;
+  const id = 'hi' + gradUid;
+  const dark = shade(accent,-45);
+  const darker = shade(accent,-62);
+  const light = shade(accent,42);
+  return `
+  <svg viewBox="0 0 100 100">
+    <defs>
+      <linearGradient id="grad${id}" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="${dark}"/>
+        <stop offset="40%" stop-color="${accent}"/>
+        <stop offset="58%" stop-color="${light}"/>
+        <stop offset="100%" stop-color="${accent}"/>
+      </linearGradient>
+      <radialGradient id="eye${id}" cx="50%" cy="25%" r="80%">
+        <stop offset="0%" stop-color="#f4fffe"/>
+        <stop offset="45%" stop-color="#3ee6df"/>
+        <stop offset="100%" stop-color="#0c2f2d"/>
+      </radialGradient>
+    </defs>
+    <path d="M28 40 Q50 18 72 40 L76 62 Q50 80 24 62 Z" fill="url(#grad${id})" stroke="${darker}" stroke-width="2" filter="url(#dropShadow)"/>
+    <path d="M31 41 Q50 27 69 41" fill="none" stroke="${light}" stroke-width="1.4" opacity=".5"/>
+    <path d="M30 60 Q50 68 70 60" fill="none" stroke="${darker}" stroke-width="1.2" opacity=".45"/>
+    <ellipse class="specular-highlight" cx="42" cy="32" rx="9" ry="4.5" opacity=".2"/>
+    <polygon points="38,50 46,50 41,60" fill="url(#eye${id})"/>
+    <polygon points="54,50 62,50 57,60" fill="url(#eye${id})"/>
+    ${extra}
+  </svg>`;
+};
+
+const armors = [
+  {
+    id:'MK I', name:'Mark I', accent:'#8d8d95', colors:['#9a9aa2','#5f5f68'],
+    icon: helmetIcon('#8d8d95', '<path d="M30 62 L32 70 M70 62 L68 70" stroke="#8d8d95" stroke-width="1.5"/>'),
+    tagline:'Improviso e sobrevivência',
+    desc:'Construída em cativeiro com sucata e peças de reposição, a primeira armadura não tinha pretensão estética alguma — apenas a função de tirar seu piloto vivo de um lugar hostil.',
+    parts:[
+      ['CASCO','Placas de ferro soldadas manualmente, com fendas estreitas para visão.'],
+      ['PROPULSÃO','Um par de lança-chamas improvisados nas botas, usados como propulsor de emergência.'],
+      ['ENERGIA','Um reator arc de primeira geração, montado às pressas no peito.'],
+      ['MOBILIDADE','Juntas rígidas e pesadas — cada passo exigia esforço físico real do piloto.'],
+    ]
+  },
+  {
+    id:'MK III', name:'Mark III', accent:'#c1121f', colors:['#c1121f','#f0a500'],
+    icon: helmetIcon('#c1121f', '<circle cx="50" cy="66" r="4" fill="#f0a500"/>'),
+    tagline:'O vermelho e dourado clássico',
+    desc:'A primeira armadura verdadeiramente "acabada": liga de ouro-titânio, acabamento vermelho e dourado, e o primeiro sistema de voo estável e repulsores confiáveis.',
+    parts:[
+      ['CASCO','Liga de ouro-titânio, resistente a calor extremo, com viseira de HUD integrada.'],
+      ['REPULSORES','Emissores de energia nas palmas das mãos, usados tanto para propulsão quanto como arma.'],
+      ['BOTAS','Propulsores duplos permitindo voo sustentado e pousos controlados.'],
+      ['REATOR ARC','Versão miniaturizada e estável, alimentando todos os sistemas por horas.'],
+    ]
+  },
+  {
+    id:'MK VII', name:'Mark VII', accent:'#d4362f', colors:['#d4362f','#f0a500'],
+    icon: helmetIcon('#d4362f', '<rect x="20" y="66" width="60" height="4" fill="#d4362f" opacity=".4"/>'),
+    tagline:'Implantação remota',
+    desc:'Projetada para batalhas em larga escala, essa versão podia ser chamada a distância: os módulos voam separadamente até o corpo do piloto e se encaixam em segundos.',
+    parts:[
+      ['DEPLOY REMOTO','Módulos independentes que voam e se acoplam ao piloto em pleno ar.'],
+      ['BLINDAGEM','Placas reforçadas para combate urbano prolongado contra múltiplos inimigos.'],
+      ['ARSENAL','Compartimentos para mísseis compactos nos antebraços e ombros.'],
+      ['HUD','Sistema de mira e rastreamento capaz de acompanhar dezenas de alvos simultâneos.'],
+    ]
+  },
+  {
+    id:'MK XLII', name:'Mark XLII', accent:'#e0521f', colors:['#d9a441','#b3341f'],
+    icon: helmetIcon('#e0521f', '<path d="M25 35 L25 45 M75 35 L75 45 M35 20 L38 26" stroke="#e0521f" stroke-width="1.5"/>'),
+    tagline:'Controle mental, peça por peça',
+    desc:'Cada componente — bota, luva, peitoral — voa e se encaixa individualmente no corpo do piloto, guiado por um implante de controle neural. A montagem se torna quase instantânea.',
+    parts:[
+      ['CONTROLE NEURAL','Interface que permite chamar e posicionar cada peça apenas com a intenção.'],
+      ['MODULARIDADE','Peças totalmente independentes, substituíveis em campo sem desmontar o traje inteiro.'],
+      ['ARMAZENAMENTO','Compartimentos individuais espalhados pela residência do piloto.'],
+      ['RESPOSTA','Tempo de acoplamento reduzido drasticamente frente a gerações anteriores.'],
+    ]
+  },
+  {
+    id:'MK L', name:'Mark L · Nano', accent:'#f0a500', colors:['#b3111d','#f0a500'],
+    icon: helmetIcon('#f0a500', '<circle cx="30" cy="30" r="1.6" fill="#f0a500"/><circle cx="70" cy="30" r="1.6" fill="#f0a500"/><circle cx="50" cy="20" r="1.6" fill="#f0a500"/>'),
+    tagline:'A primeira nanoarmadura',
+    desc:'Ruptura total de design: bilhões de nanopartículas guardadas em um disco no peito, capazes de se espalhar e formar qualquer configuração de armadura sob comando mental.',
+    parts:[
+      ['REPOSITÓRIO','Disco compacto fixado ao peito, contendo toda a massa de nanopartículas.'],
+      ['FORMAÇÃO INSTANTÂNEA','A armadura se monta sobre o corpo em poucos segundos, sem peças físicas separadas.'],
+      ['ARMAS ADAPTÁVEIS','Partículas podem se reorganizar em lâminas, escudos e canhões de energia.'],
+      ['AUTO-REPARO','Seções danificadas são reconstruídas em tempo real durante o combate.'],
+    ]
+  },
+  {
+    id:'MK LXXXV', name:'Mark LXXXV', accent:'#ffcb47', colors:['#8f0d16','#ffcb47'],
+    icon: helmetIcon('#ffcb47', '<polygon points="50,14 54,24 46,24" fill="#ffcb47"/>'),
+    tagline:'Bleeding Edge — a versão definitiva',
+    desc:'O ápice da linha nanotecnológica: mais partículas, mais formas de arma, um capacete que se abre e fecha em uma fração de segundo e integração quase perfeita entre piloto e traje.',
+    parts:[
+      ['DENSIDADE NANO','Maior volume de partículas, permitindo blindagem mais espessa sob demanda.'],
+      ['CAPACETE ADAPTATIVO','Abre e fecha instantaneamente, sem interromper visão ou comunicação.'],
+      ['PROPULSÃO','Propulsores distribuídos por todo o corpo para manobras extremas em voo.'],
+      ['INTEGRAÇÃO','Resposta quase imediata aos comandos neurais do piloto, refinada ao longo de dezenas de versões.'],
+    ]
+  },
+];
+
+const grid = document.getElementById('armorGrid');
+const detail = document.getElementById('armorDetail');
+let openIndex = null;
+
+armors.forEach((a, i)=>{
+  const card = document.createElement('div');
+  card.className = 'armor-card';
+  card.innerHTML = `
+    <div class="mark-id mono">${a.id}</div>
+    <div class="mark-name">${a.name}</div>
+    <div class="icon-box">${a.icon}</div>
+  `;
+  card.addEventListener('click', ()=> selectArmor(i));
+  grid.appendChild(card);
+});
+
+function selectArmor(i){
+  const cards = grid.querySelectorAll('.armor-card');
+  if(openIndex === i){
+    detail.classList.remove('open');
+    cards[i].classList.remove('active');
+    openIndex = null;
+    return;
+  }
+  cards.forEach(c=>c.classList.remove('active'));
+  cards[i].classList.add('active');
+  const a = armors[i];
+  detail.innerHTML = `
+    <div class="armor-detail-visual">${armorBody({primary:a.colors[0], secondary:a.colors[1], uid:'d'+i})}</div>
+    <div class="armor-detail-info">
+      <div class="desig">${a.id} — ${a.tagline}</div>
+      <h4>${a.name}</h4>
+      <p>${a.desc}</p>
+      <ul class="part-list">
+        ${a.parts.map(p=>`<li><div class="part-tag">${p[0]}</div><div class="part-desc">${p[1]}</div></li>`).join('')}
+      </ul>
+    </div>`;
+  detail.classList.add('open');
+  openIndex = i;
+  detail.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+selectArmor(1); // Mark III aberto por padrão
+
+/* ---------------- JARVIS terminal typing ---------------- */
+const termLinesEl = document.getElementById('termLines');
+const scriptLines = [
+  {p:'stark@lab:~$', t:'inicializar J.A.R.V.I.S.'},
+  {p:'JARVIS >', t:'Bom dia, senhor. Todos os sistemas operacionais.'},
+  {p:'stark@lab:~$', t:'diagnóstico armadura --completo'},
+  {p:'JARVIS >', t:'Reator arc a 100%. Repulsores calibrados. Pronto para voo.'},
+];
+const termObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ runTerminal(); termObserver.disconnect(); }
+  });
+},{threshold:.4});
+termObserver.observe(document.getElementById('terminal'));
+
+function runTerminal(){
+  let delay = 200;
+  scriptLines.forEach((line, idx)=>{
+    setTimeout(()=> typeLine(line), delay);
+    delay += 900 + line.t.length * 22;
+  });
+}
+function typeLine(line){
+  const div = document.createElement('div');
+  div.className = 'term-line show';
+  div.innerHTML = `<span class="term-prompt">${line.p}</span> <span class="txt"></span><span class="caret"></span>`;
+  termLinesEl.appendChild(div);
+  const txtEl = div.querySelector('.txt');
+  let i = 0;
+  const iv = setInterval(()=>{
+    txtEl.textContent += line.t[i];
+    i++;
+    if(i >= line.t.length) clearInterval(iv);
+  }, 22);
+}
+
+/* ---------------- nanotech: realistic swarm -> helmet assembly ---------------- */
+const canvas = document.getElementById('nanoCanvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+
+function bez(p0,p1,p2,t){
+  return [ (1-t)*(1-t)*p0[0] + 2*(1-t)*t*p1[0] + t*t*p2[0], (1-t)*(1-t)*p0[1] + 2*(1-t)*t*p1[1] + t*t*p2[1] ];
+}
+function lerpPt(p0,p1,t){ return [ p0[0]+(p1[0]-p0[0])*t, p0[1]+(p1[1]-p0[1])*t ]; }
+
+/* points sampled along an Iron-Man-style faceplate silhouette (0-100 space) */
+function buildHelmetPoints(){
+  const pts = [];
+  const segs = [
+    {type:'Q', p0:[28,40], p1:[50,18], p2:[72,40], n:24, c:'gold'},
+    {type:'L', p0:[72,40], p1:[76,62], n:12, c:'gold'},
+    {type:'Q', p0:[76,62], p1:[50,80], p2:[24,62], n:24, c:'gold'},
+    {type:'L', p0:[24,62], p1:[28,40], n:12, c:'gold'},
+    {type:'Q', p0:[31,41], p1:[50,27], p2:[69,41], n:14, c:'goldLight'},
+    {type:'Q', p0:[30,60], p1:[50,68], p2:[70,60], n:14, c:'goldDark'},
+    {type:'L', p0:[38,50], p1:[46,50], n:6, c:'cyan'},
+    {type:'L', p0:[46,50], p1:[41,60], n:6, c:'cyan'},
+    {type:'L', p0:[41,60], p1:[38,50], n:6, c:'cyan'},
+    {type:'L', p0:[54,50], p1:[62,50], n:6, c:'cyan'},
+    {type:'L', p0:[62,50], p1:[57,60], n:6, c:'cyan'},
+    {type:'L', p0:[57,60], p1:[54,50], n:6, c:'cyan'},
+  ];
+  segs.forEach(s=>{
+    for(let i=0;i<s.n;i++){
+      const t = i/s.n;
+      const p = s.type==='Q' ? bez(s.p0,s.p1,s.p2,t) : lerpPt(s.p0,s.p1,t);
+      pts.push({x:p[0], y:p[1], c:s.c});
+    }
+  });
+  return pts;
+}
+const helmetPoints = buildHelmetPoints();
+
+const colorMap = {
+  gold:      {core:'#ffe6a0', mid:'rgba(240,165,0,0.9)'},
+  goldLight: {core:'#fff4d6', mid:'rgba(255,203,71,0.9)'},
+  goldDark:  {core:'#ffcf7a', mid:'rgba(193,120,0,0.9)'},
+  cyan:      {core:'#eafffe', mid:'rgba(62,230,223,0.95)'}
+};
+
+function mapPt(p){
+  const size = Math.min(W,H) * 0.8;
+  const cx = W/2, cy = H*0.52;
+  return { x: cx + (p.x/100 - 0.5) * size, y: cy + (p.y/100 - 0.5) * size };
+}
+
+function resize(){
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * devicePixelRatio;
+  canvas.height = rect.height * devicePixelRatio;
+  canvas.style.width = rect.width+'px';
+  canvas.style.height = rect.height+'px';
+  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  W = rect.width; H = rect.height;
+  initParticles();
+}
+
+function initParticles(){
+  particles = helmetPoints.map((hp, i)=>{
+    const target = mapPt(hp);
+    const orbitRadius = 18 + Math.random()*Math.min(W,H)*0.36;
+    const orbitAngle = Math.random()*Math.PI*2;
+    return {
+      x: W/2 + Math.cos(orbitAngle)*orbitRadius,
+      y: H/2 + Math.sin(orbitAngle)*orbitRadius*0.7,
+      tx: target.x, ty: target.y,
+      orbitAngle, orbitRadius,
+      orbitSpeed: (0.15 + Math.random()*0.35) * (Math.random()<0.5?1:-1) * 0.0011,
+      phase: Math.random()*Math.PI*2,
+      r: 1.1 + Math.random()*1.5,
+      col: colorMap[hp.c]
+    };
+  });
+}
+window.addEventListener('resize', resize);
+
+let assembled = false;
+function setAssembled(v){
+  if(v === assembled) return;
+  if(!v){
+    // switching to swarm: derive orbit params from current position so motion stays continuous
+    particles.forEach(p=>{
+      const dx = p.x - W/2, dy = p.y - H/2;
+      p.orbitRadius = Math.max(14, Math.hypot(dx,dy));
+      p.orbitAngle = Math.atan2(dy,dx);
+    });
+  }
+  assembled = v;
+}
+const nanoWrap = document.getElementById('nanoWrap');
+nanoWrap.addEventListener('click', ()=> setAssembled(!assembled));
+
+const nanoObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) setAssembled(true); });
+},{threshold:.4});
+nanoObserver.observe(canvas);
+
+function animateNano(t){
+  ctx.clearRect(0,0,W,H);
+
+  particles.forEach(p=>{
+    if(assembled){
+      p.x += (p.tx - p.x) * 0.055;
+      p.y += (p.ty - p.y) * 0.055;
+      p.x += Math.sin(t/650 + p.phase) * 0.35;
+      p.y += Math.cos(t/700 + p.phase) * 0.35;
+    } else {
+      p.orbitAngle += p.orbitSpeed * 16;
+      const wob = Math.sin(t/500 + p.phase) * 6;
+      p.x += ((W/2 + Math.cos(p.orbitAngle)*p.orbitRadius) - p.x) * 0.06;
+      p.y += ((H/2 + Math.sin(p.orbitAngle)*p.orbitRadius*0.72 + wob) - p.y) * 0.06;
+    }
+
+    const glow = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*3);
+    glow.addColorStop(0, p.col.mid);
+    glow.addColorStop(1, 'transparent');
+    ctx.beginPath();
+    ctx.fillStyle = glow;
+    ctx.arc(p.x, p.y, p.r*3, 0, Math.PI*2);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.fillStyle = p.col.core;
+    ctx.arc(p.x, p.y, p.r*0.55, 0, Math.PI*2);
+    ctx.fill();
+  });
+
+  // connective mesh lines
+  ctx.lineWidth = 1;
+  const maxDist = assembled ? 16 : 46;
+  ctx.strokeStyle = assembled ? 'rgba(240,165,0,0.16)' : 'rgba(62,230,223,0.07)';
+  for(let i=0;i<particles.length;i++){
+    const a = particles[i];
+    const b = particles[(i+1)%particles.length];
+    const d = Math.hypot(a.x-b.x, a.y-b.y);
+    if(d < maxDist){
+      ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+    }
+  }
+
+  // central reactor pulse once assembled
+  if(assembled){
+    const pulse = 4 + Math.sin(t/450)*1.6;
+    const rg = ctx.createRadialGradient(W/2, H*0.5, 0, W/2, H*0.5, pulse*4);
+    rg.addColorStop(0, 'rgba(234,255,254,0.9)');
+    rg.addColorStop(0.4, 'rgba(62,230,223,0.5)');
+    rg.addColorStop(1, 'transparent');
+    ctx.beginPath();
+    ctx.fillStyle = rg;
+    ctx.arc(W/2, H*0.5, pulse*4, 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  requestAnimationFrame(animateNano);
+}
+resize();
+requestAnimationFrame(animateNano);
+</script>
+</body>
+</html>
