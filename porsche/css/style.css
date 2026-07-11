@@ -1,0 +1,193 @@
+/* ================= PORSCHE — UM FILME INTERATIVO ================= */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Archivo:wght@300;400;600;800&family=Archivo+Expanded:wght@600;800&display=swap');
+
+:root{
+  --gold:#c9a227;
+  --gold-soft:rgba(201,162,39,.65);
+  --ink:#f2efe8;
+  --ink-dim:rgba(242,239,232,.62);
+  --bg:#050507;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:var(--bg);}
+body{
+  font-family:'Archivo',system-ui,sans-serif;
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  user-select:none;
+}
+
+#scene{position:fixed;inset:0;width:100%;height:100%;display:block;cursor:grab;}
+#scene.dragging{cursor:grabbing;}
+
+/* ---------- efeitos de película ---------- */
+.film-vignette{
+  pointer-events:none;position:fixed;inset:0;z-index:20;
+  background:radial-gradient(ellipse 110% 90% at 50% 45%, transparent 55%, rgba(0,0,0,.55) 100%);
+}
+.film-grain{
+  pointer-events:none;position:fixed;inset:-100px;z-index:21;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain .9s steps(4) infinite;
+}
+@keyframes grain{
+  0%{transform:translate(0,0)}25%{transform:translate(-40px,30px)}
+  50%{transform:translate(30px,-45px)}75%{transform:translate(-25px,-20px)}100%{transform:translate(35px,40px)}
+}
+.letterbox{
+  position:fixed;left:0;right:0;height:6.5vh;background:#000;z-index:22;pointer-events:none;
+  transition:transform 1.4s cubic-bezier(.7,0,.2,1);
+}
+.letterbox.top{top:0;transform-origin:top;}
+.letterbox.bottom{bottom:0;transform-origin:bottom;}
+body.playing .letterbox.top{transform:translateY(-40%);}
+body.playing .letterbox.bottom{transform:translateY(40%);}
+
+/* ---------- loader / intro ---------- */
+#loader{
+  position:fixed;inset:0;z-index:100;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  transition:opacity 1.6s ease, visibility 1.6s;
+}
+#loader.hidden{opacity:0;visibility:hidden;}
+.loader-inner{max-width:520px;padding:24px;}
+.loader-crest{margin-bottom:26px;opacity:.9;}
+.loader-title{
+  font-family:'Archivo Expanded','Archivo',sans-serif;font-weight:800;
+  font-size:clamp(42px,9vw,84px);letter-spacing:.34em;text-indent:.34em;line-height:1;
+}
+.loader-sub{
+  margin-top:14px;font-size:12px;letter-spacing:.55em;text-indent:.55em;color:var(--gold);
+}
+.loader-bar{width:220px;height:1px;background:rgba(255,255,255,.14);margin:38px auto 0;}
+.loader-bar-fill{width:0%;height:100%;background:var(--gold);transition:width .4s ease;}
+.start-btn{
+  margin-top:34px;background:transparent;color:var(--ink);
+  border:1px solid rgba(201,162,39,.55);padding:15px 46px;
+  font-family:'Archivo',sans-serif;font-size:12.5px;letter-spacing:.34em;text-indent:.34em;
+  cursor:pointer;transition:all .35s ease;
+}
+.start-btn:enabled:hover{background:var(--gold);color:#0a0a0c;box-shadow:0 0 34px rgba(201,162,39,.35);}
+.start-btn:disabled{opacity:.45;cursor:default;}
+.loader-note{margin-top:30px;font-size:10.5px;line-height:1.7;letter-spacing:.12em;color:rgba(242,239,232,.38);}
+
+/* ---------- HUD ---------- */
+.hud-top{
+  position:fixed;top:0;left:0;right:0;z-index:30;pointer-events:none;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:calc(6.5vh + 14px) 34px 0;
+  opacity:0;transition:opacity 1.2s ease .6s;
+}
+body.playing .hud-top{opacity:1;}
+.wordmark{
+  font-family:'Archivo Expanded','Archivo',sans-serif;font-weight:800;
+  font-size:15px;letter-spacing:.4em;
+}
+.wordmark span{color:var(--gold);font-size:9px;letter-spacing:.3em;vertical-align:middle;margin-left:10px;font-weight:600;}
+.hud-hint{
+  font-size:9.5px;letter-spacing:.26em;color:var(--ink-dim);
+  transition:opacity 1s ease;
+}
+.hud-hint.faded{opacity:0;}
+
+/* capítulos */
+.chapters{
+  position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:30;
+  display:flex;flex-direction:column;gap:20px;
+  opacity:0;transition:opacity 1.2s ease .8s;
+}
+body.playing .chapters{opacity:1;}
+.chapters button{
+  display:flex;align-items:center;gap:10px;background:none;border:none;color:var(--ink-dim);
+  font-family:'Archivo',sans-serif;cursor:pointer;text-align:right;transition:color .3s;
+}
+.chapters button i{
+  width:22px;height:1px;background:currentColor;display:block;order:3;transition:width .4s ease;
+}
+.chapters button b{font-size:10px;letter-spacing:.2em;order:2;font-weight:600;}
+.chapters button span{
+  font-size:10px;letter-spacing:.22em;text-transform:uppercase;order:1;
+  opacity:0;transform:translateX(6px);transition:all .35s ease;
+}
+.chapters button:hover span{opacity:.8;transform:none;}
+.chapters button.active{color:var(--gold);}
+.chapters button.active i{width:44px;}
+.chapters button.active span{opacity:1;transform:none;}
+
+/* barra de progresso do filme */
+.progress-rail{
+  position:fixed;left:0;right:0;bottom:0;height:2px;z-index:31;background:rgba(255,255,255,.08);
+}
+.progress-fill{width:0%;height:100%;background:linear-gradient(90deg,#7a6216,var(--gold));box-shadow:0 0 12px rgba(201,162,39,.6);}
+
+/* ---------- overlays das salas ---------- */
+.ov{
+  position:fixed;z-index:25;pointer-events:none;
+  opacity:0;transform:translateY(26px);
+  transition:opacity 1s ease, transform 1s ease;
+  max-width:560px;
+}
+.ov.on{opacity:1;transform:none;}
+.ov .eyebrow{
+  font-size:10px;letter-spacing:.42em;color:var(--gold);margin-bottom:18px;font-weight:600;
+}
+.ov h1{
+  font-family:'Archivo Expanded','Archivo',sans-serif;font-weight:800;
+  font-size:clamp(54px,11vw,128px);letter-spacing:.22em;text-indent:.22em;line-height:.95;
+}
+.ov h2{
+  font-family:'Archivo Expanded','Archivo',sans-serif;font-weight:800;
+  font-size:clamp(26px,4.2vw,46px);letter-spacing:.1em;line-height:1.08;margin-bottom:16px;
+}
+.ov h2 span{color:var(--gold);font-size:.5em;letter-spacing:.3em;vertical-align:super;margin-left:12px;}
+.ov p{
+  font-family:'Cormorant Garamond',serif;font-size:clamp(17px,2vw,21px);
+  line-height:1.65;color:var(--ink-dim);font-weight:400;
+}
+.ov .lead{margin-top:26px;text-align:center;}
+
+.ov-hero{left:50%;top:50%;transform:translate(-50%,-42%);text-align:center;max-width:none;}
+.ov-hero.on{transform:translate(-50%,-50%);}
+
+.ov-side{left:6vw;top:50%;transform:translateY(calc(-50% + 26px));}
+.ov-side.on{transform:translateY(-50%);}
+.ov-side.right{left:auto;right:9vw;text-align:right;}
+
+.ov-tech{left:6vw;top:50%;transform:translateY(calc(-50% + 26px));max-width:480px;}
+.ov-tech.on{transform:translateY(-50%);}
+.engine-btn{
+  pointer-events:auto;margin-top:28px;background:rgba(5,5,7,.55);color:var(--gold);
+  border:1px solid rgba(201,162,39,.55);padding:13px 30px;backdrop-filter:blur(6px);
+  font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.3em;text-indent:.3em;cursor:pointer;
+  transition:all .3s ease;
+}
+.engine-btn:hover{background:var(--gold);color:#0a0a0c;box-shadow:0 0 28px rgba(201,162,39,.4);}
+
+.ov-car{left:6vw;bottom:12vh;max-width:440px;}
+.ov-finale{left:50%;top:50%;transform:translate(-50%,-42%);text-align:center;max-width:640px;}
+.ov-finale.on{transform:translate(-50%,-50%);}
+.ov-finale .credits{margin-top:44px;font-family:'Archivo';font-size:10px;letter-spacing:.2em;line-height:2;color:rgba(242,239,232,.4);}
+
+/* rótulos 3D do motor */
+.tag3d{
+  position:fixed;z-index:26;pointer-events:none;opacity:0;
+  font-size:9.5px;letter-spacing:.24em;color:var(--ink);
+  padding-left:14px;white-space:nowrap;
+  transition:opacity .5s ease;
+  text-shadow:0 1px 6px rgba(0,0,0,.9);
+}
+.tag3d::before{
+  content:"";position:absolute;left:0;top:50%;width:8px;height:8px;margin-top:-4px;
+  border:1px solid var(--gold);border-radius:50%;box-shadow:0 0 8px var(--gold);
+}
+.tag3d.on{opacity:.95;}
+
+@media (max-width:760px){
+  .chapters{right:10px;gap:14px;}
+  .chapters button span{display:none;}
+  .ov-side,.ov-side.right,.ov-tech,.ov-car{left:6vw;right:6vw;text-align:left;max-width:none;}
+  .hud-hint{display:none;}
+  .letterbox{height:4vh;}
+  .hud-top{padding-top:calc(4vh + 12px);}
+}

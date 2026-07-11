@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>PORSCHE — Um Filme Interativo</title>
+<meta name="description" content="Experiência cinematográfica 3D sobre a história, a tecnologia e as lendas da Porsche. Site tributo não-oficial.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23050507' stroke='%23c9a227' stroke-width='2'/%3E%3Cpath d='M16 7 L18.4 13.6 L25 13.6 L19.8 17.8 L21.8 24.5 L16 20.4 L10.2 24.5 L12.2 17.8 L7 13.6 L13.6 13.6 Z' fill='%23c9a227'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three/build/three.module.js",
+    "three/addons/": "./vendor/three/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+
+<!-- ============ LOADING / INTRO ============ -->
+<div id="loader">
+  <div class="loader-inner">
+    <div class="loader-crest">
+      <svg viewBox="0 0 80 80" width="72" height="72" aria-hidden="true">
+        <circle cx="40" cy="40" r="36" fill="none" stroke="#c9a227" stroke-width="1.2" opacity=".8"/>
+        <circle cx="40" cy="40" r="30" fill="none" stroke="#c9a227" stroke-width=".6" opacity=".45"/>
+        <path d="M40 16 L46 34 L64 34 L50 45 L55 63 L40 52 L25 63 L30 45 L16 34 L34 34 Z"
+              fill="none" stroke="#c9a227" stroke-width="1.1" opacity=".9"/>
+      </svg>
+    </div>
+    <h1 class="loader-title">PORSCHE</h1>
+    <p class="loader-sub">UM FILME INTERATIVO</p>
+    <div class="loader-bar"><div class="loader-bar-fill" id="loaderFill"></div></div>
+    <button id="startBtn" class="start-btn" disabled>PREPARANDO A CENA…</button>
+    <p class="loader-note">Site tributo não-oficial, sem afiliação com a Porsche AG.<br>Todo o conteúdo 3D é original, criado em código.</p>
+  </div>
+</div>
+
+<!-- ============ WEBGL ============ -->
+<canvas id="scene"></canvas>
+
+<!-- grain + vignette cinematográficos -->
+<div class="film-vignette" aria-hidden="true"></div>
+<div class="film-grain" aria-hidden="true"></div>
+<div class="letterbox top" aria-hidden="true"></div>
+<div class="letterbox bottom" aria-hidden="true"></div>
+
+<!-- ============ HUD ============ -->
+<header class="hud-top">
+  <div class="wordmark">PORSCHE<span>•&nbsp;TRIBUTO</span></div>
+  <div class="hud-hint" id="hudHint">ROLE PARA AVANÇAR O FILME&nbsp;&nbsp;·&nbsp;&nbsp;ARRASTE PARA OLHAR AO REDOR</div>
+</header>
+
+<nav class="chapters" id="chapters" aria-label="Capítulos">
+  <button data-ch="0"><i></i><b>01</b><span>O Salão</span></button>
+  <button data-ch="1"><i></i><b>02</b><span>História</span></button>
+  <button data-ch="2"><i></i><b>03</b><span>O Coração Boxer</span></button>
+  <button data-ch="3"><i></i><b>04</b><span>Lendas</span></button>
+  <button data-ch="4"><i></i><b>05</b><span>A Estrada</span></button>
+</nav>
+
+<div class="progress-rail"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- ============ OVERLAYS DE CADA SALA ============ -->
+
+<section class="ov ov-hero" data-ov="hero">
+  <p class="eyebrow">CAPÍTULO 01 — O SALÃO</p>
+  <h1>PORSCHE</h1>
+  <p class="lead">Setenta e cinco anos transformando engenharia em emoção.<br>Role para entrar no filme.</p>
+</section>
+
+<section class="ov ov-side right ov-hist1" data-ov="hist1">
+  <p class="eyebrow">CAPÍTULO 02 — HISTÓRIA</p>
+  <h2>1931 — O ESCRITÓRIO DE STUTTGART</h2>
+  <p>Ferdinand Porsche funda um pequeno escritório de engenharia.
+     Dali sairiam ideias que mudariam o automóvel para sempre.</p>
+</section>
+
+<section class="ov ov-side ov-hist2" data-ov="hist2">
+  <h2>1948 — NASCE O 356</h2>
+  <p>O primeiro carro a levar o nome Porsche: leve, artesanal, ágil.
+     Apenas 40 cv — e o começo de uma lenda.</p>
+</section>
+
+<section class="ov ov-side right ov-hist3" data-ov="hist3">
+  <h2>1963 — A SILHUETA ETERNA</h2>
+  <p>O 911 é apresentado em Frankfurt. Motor boxer atrás do eixo traseiro
+     e um perfil que atravessa décadas praticamente intacto.</p>
+</section>
+
+<section class="ov ov-tech" data-ov="tech">
+  <p class="eyebrow">CAPÍTULO 03 — TECNOLOGIA</p>
+  <h2>O CORAÇÃO BOXER</h2>
+  <p>Seis cilindros contrapostos, deitados como os punhos de um boxeador:
+     centro de gravidade baixo, equilíbrio perfeito, som inconfundível.
+     Décadas refrigerado a ar pela ventoinha icônica — depois água, turbo
+     e o câmbio PDK de dupla embreagem.</p>
+  <button id="engineBtn" class="engine-btn">DESACOPLAR MOTOR</button>
+</section>
+
+<section class="ov ov-car" data-ov="car0">
+  <p class="eyebrow">CAPÍTULO 04 — LENDAS</p>
+  <h2>356 <span>1948</span></h2>
+  <p>O primeiro. Carroceria de alumínio batida à mão em Gmünd.
+     A semente de tudo o que viria.</p>
+</section>
+
+<section class="ov ov-car" data-ov="car1">
+  <h2>911 CARRERA <span>1963</span></h2>
+  <p>O ícone eterno. A silhueta mais reconhecível do automobilismo,
+     evoluída sem nunca ser abandonada.</p>
+</section>
+
+<section class="ov ov-car" data-ov="car2">
+  <h2>917 <span>1970</span></h2>
+  <p>O monstro de Le Mans. Primeira vitória geral da marca nas 24 Horas,
+     superando 380 km/h na reta Mulsanne.</p>
+</section>
+
+<section class="ov ov-car" data-ov="car3">
+  <h2>918 SPYDER <span>2013</span></h2>
+  <p>887 cv híbridos e recorde em Nürburgring: a prova de que
+     eletrificação também é emoção.</p>
+</section>
+
+<section class="ov ov-finale" data-ov="finale">
+  <p class="eyebrow">CAPÍTULO 05 — A ESTRADA</p>
+  <h2>A LENDA CONTINUA</h2>
+  <p>Cada Porsche sai de Zuffenhausen com a mesma missão de 1948:
+     transformar engenharia em emoção.</p>
+  <p class="credits">Experiência 3D criada em código com Three.js.<br>
+     Site tributo não-oficial, sem afiliação com a Porsche AG.</p>
+</section>
+
+<!-- rótulos 3D do motor (posicionados via JS) -->
+<div class="tag3d" data-tag="fan">VENTOINHA DE ARREFECIMENTO</div>
+<div class="tag3d" data-tag="cyl">CILINDROS ALETADOS</div>
+<div class="tag3d" data-tag="crank">VIRABREQUIM</div>
+<div class="tag3d" data-tag="exh">ESCAPAMENTO</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
