@@ -142,7 +142,7 @@ body.playing .chapters{opacity:1;}
 }
 .ov h2 span{color:var(--gold);font-size:.5em;letter-spacing:.3em;vertical-align:super;margin-left:12px;}
 .ov p{
-  font-family:'Cormorant Garamond',serif;font-size:clamp(17px,2vw,21px);
+  font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;font-size:clamp(17px,2vw,21px);
   line-height:1.65;color:var(--ink-dim);font-weight:400;
 }
 .ov .lead{margin-top:26px;text-align:center;}
