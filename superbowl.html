@@ -165,6 +165,14 @@ h1,h2,h3{font-family:'Anton',sans-serif; font-weight:400; text-wrap:balance; let
 .trophy-stage{position:relative; width:150px; height:210px; margin-bottom:26px;}
 .trophy-stage svg{width:100%; height:100%; filter:drop-shadow(0 0 22px color-mix(in srgb, var(--gold) 55%, transparent));}
 .trophy-stage .glow-pulse{animation:torchPulse 3s ease-in-out infinite;}
+
+/* ---- official-asset slots: falls back to the illustrated icon until a real
+   file is dropped in /assets — see /assets/README.md for exact filenames ---- */
+.icon-slot{position:relative; display:inline-block;}
+.icon-slot > svg{width:100%; height:100%; display:block; transition:opacity .35s ease;}
+.icon-slot > img.official{position:absolute; inset:0; width:100%; height:100%; object-fit:contain; opacity:0; transition:opacity .35s ease;}
+.icon-slot.official-loaded > svg{opacity:0;}
+.icon-slot.official-loaded > img.official{opacity:1;}
 @keyframes torchPulse{
   0%,100%{filter:drop-shadow(0 0 14px color-mix(in srgb, var(--gold) 45%, transparent));}
   50%{filter:drop-shadow(0 0 30px color-mix(in srgb, var(--gold) 70%, transparent));}
@@ -352,7 +360,7 @@ footer p{font-size:12px; color:var(--text-faint); max-width:44ch; margin:0 auto;
 <main>
   <!-- HERO -->
   <section class="hero" id="inicio">
-    <div class="trophy-stage">
+    <div class="trophy-stage icon-slot" data-official="assets/trophy.png">
       <svg viewBox="0 0 100 140" class="glow-pulse"><use href="#i-trophy"/></svg>
     </div>
     <h1 class="hero-title">A HISTÓRIA<br>DO <span class="accent">SUPER BOWL</span></h1>
@@ -390,7 +398,7 @@ footer p{font-size:12px; color:var(--text-faint); max-width:44ch; margin:0 auto;
         <p>Um objeto novo a cada ano — nunca o mesmo troféu passa adiante.</p>
       </div>
       <div class="trophy-panel reveal">
-        <div class="trophy-big"><svg viewBox="0 0 100 140"><use href="#i-trophy"/></svg></div>
+        <div class="trophy-big icon-slot" data-official="assets/trophy.png"><svg viewBox="0 0 100 140"><use href="#i-trophy"/></svg></div>
         <ul class="fact-list">
           <li><span class="k">Material</span><span class="v">Prata esterlina maciça</span></li>
           <li><span class="k">Fabricante</span><span class="v">Tiffany &amp; Co., Nova York</span></li>
@@ -515,10 +523,12 @@ footer p{font-size:12px; color:var(--text-faint); max-width:44ch; margin:0 auto;
   }
   function shieldSVG(team, cls){
     var initials = team.a;
-    return '<svg class="shield '+(cls||'')+'" viewBox="0 0 100 108" style="--c1:'+team.c1+';--c2:'+team.c2+'">'+
+    var svg = '<svg viewBox="0 0 100 108" style="--c1:'+team.c1+';--c2:'+team.c2+'">'+
       '<path d="M50,4 L92,17 V52 C92,80 74,96 50,104 C26,96 8,80 8,52 V17 Z" fill="var(--c1)" stroke="var(--c2)" stroke-width="4"/>'+
       '<text x="50" y="63" text-anchor="middle" font-family="Anton" font-size="30" fill="var(--c2)">'+initials+'</text>'+
       '</svg>';
+    var slug = team.a.toLowerCase();
+    return '<span class="icon-slot shield '+(cls||'')+'" data-official="assets/shields/'+slug+'.png">'+svg+'</span>';
   }
 
   // ---- render timeline ----
@@ -676,6 +686,19 @@ footer p{font-size:12px; color:var(--text-faint); max-width:44ch; margin:0 auto;
     });
   }, {rootMargin:"-40% 0px -50% 0px", threshold:0});
   sections.forEach(function(s){ if(s) navIO.observe(s); });
+
+  // ---- swap in official trophy photo / team shields when present in /assets ----
+  // Silent no-op today (files don't exist yet) — the illustrated icon stays put.
+  // Drop real files at the paths in assets/README.md and they take over automatically.
+  document.querySelectorAll(".icon-slot[data-official]").forEach(function(slot){
+    var img = new Image();
+    img.className = "official";
+    img.alt = "";
+    img.loading = "lazy";
+    img.onload = function(){ slot.appendChild(img); slot.classList.add("official-loaded"); };
+    img.onerror = function(){ /* no official asset at this path — keep the illustration */ };
+    img.src = slot.dataset.official;
+  });
 
 })();
 </script>
