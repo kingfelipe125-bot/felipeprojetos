@@ -1,0 +1,100 @@
+// Gerenciador de Versões de Projetos (CAD/BIM)
+// SQLite para desenvolvimento local rápido. Para produção, troque o provider
+// para "postgresql" e ajuste DATABASE_URL no .env.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// SQLite não suporta enums nativos no Prisma; os valores válidos de
+// disciplina e status ficam centralizados em src/lib/constants.ts e
+// validados na borda da API com zod.
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  role      String   @default("ENGENHEIRO")
+  createdAt DateTime @default(now())
+
+  versions  DocumentVersion[] @relation("VersionAuthor")
+  auditLogs AuditLog[]
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  client      String?
+  location    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  documents Document[]
+}
+
+model Document {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  code       String // Ex: "ARQ-001"
+  title      String // Ex: "Planta Baixa - Pavimento Térreo"
+  discipline String // ARQUITETURA | ESTRUTURAS | ELETRICA | HIDRAULICA | OUTROS
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  activeVersionId String?          @unique
+  activeVersion   DocumentVersion? @relation("ActiveVersion", fields: [activeVersionId], references: [id])
+
+  versions DocumentVersion[] @relation("DocumentVersions")
+
+  @@unique([projectId, code])
+}
+
+model DocumentVersion {
+  id         String @id @default(cuid())
+  documentId String
+  document   Document @relation("DocumentVersions", fields: [documentId], references: [id], onDelete: Cascade)
+
+  revisionNumber Int // 0, 1, 2, ...
+  revisionLabel  String // "R00", "R01", ...
+  status         String // RASCUNHO | EM_REVISAO | APROVADO_PARA_OBRA | OBSOLETO
+
+  fileName String
+  fileUrl  String
+  fileSize Int
+
+  changeReason String?
+
+  qrCode String @unique // código curto usado em /v/[code]
+
+  authorId String
+  author   User   @relation("VersionAuthor", fields: [authorId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  activeFor Document?  @relation("ActiveVersion")
+  auditLogs AuditLog[]
+
+  @@unique([documentId, revisionNumber])
+}
+
+model AuditLog {
+  id                String          @id @default(cuid())
+  documentVersionId String
+  documentVersion   DocumentVersion @relation(fields: [documentVersionId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  action  String // UPLOAD | STATUS_CHANGE
+  detail  String
+
+  createdAt DateTime @default(now())
+}
