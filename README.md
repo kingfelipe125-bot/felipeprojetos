@@ -6,8 +6,8 @@ Aplicação web para controle de revisões de plantas de arquitetura e engenhari
 
 - **Frontend:** Next.js 14 (App Router) + TypeScript, Tailwind CSS, componentes estilo shadcn/ui, ícones Lucide React
 - **Backend:** Next.js API Routes + Prisma ORM
-- **Banco de dados:** SQLite (dev local). Para produção, troque `provider` para `postgresql` em `prisma/schema.prisma` e ajuste `DATABASE_URL`
-- **Armazenamento de arquivos:** simulado em `public/uploads` (`src/lib/storage.ts`) — troque por Supabase Storage/S3 em produção mantendo a mesma assinatura de retorno
+- **Banco de dados:** PostgreSQL (compatível com qualquer provedor — Neon, Supabase, RDS, etc.)
+- **Armazenamento de arquivos:** Vercel Blob em produção (quando `BLOB_READ_WRITE_TOKEN` está definido); fallback para disco local (`public/uploads`) em desenvolvimento — ver `src/lib/storage.ts`
 - **QR Code:** geração via `qrcode`, verificação pública em `/v/[code]`
 
 ## Funcionalidades
@@ -24,11 +24,13 @@ Aplicação web para controle de revisões de plantas de arquitetura e engenhari
 
 ## Como rodar localmente
 
+Requer um banco PostgreSQL acessível (local, Docker, ou já um Neon/Supabase gratuito — pode ser o mesmo que você vai usar em produção).
+
 ```bash
 npm install
-cp .env.example .env          # ajuste se necessário
-npx prisma migrate dev         # cria o banco SQLite e as tabelas
-npm run db:seed                # popula dados de demonstração
+cp .env.example .env            # edite DATABASE_URL com sua conexão Postgres
+npm run db:push                  # cria as tabelas a partir do schema Prisma
+npm run db:seed                  # popula dados de demonstração
 npm run dev
 ```
 
@@ -37,6 +39,44 @@ Acesse http://localhost:3000.
 ### Dados de demonstração
 
 O seed (`prisma/seed.ts`) cria 2 projetos, 4 usuários e documentos em diferentes estágios do workflow — incluindo um documento com uma revisão obsoleta e outra aprovada, para testar o fluxo de QR Code imediatamente. Os códigos de verificação gerados são exibidos no terminal ao final do seed (`/v/<code>`).
+
+## Deploy público (Vercel + Neon)
+
+Este é o caminho recomendado para ter uma URL pública (`https://seu-app.vercel.app`) para compartilhar.
+
+### 1. Banco de dados (Neon — grátis)
+
+1. Crie uma conta em [neon.tech](https://neon.tech) e um novo projeto/banco.
+2. Copie a **connection string** (formato `postgresql://usuario:senha@host/banco?sslmode=require`).
+
+### 2. Deploy do app (Vercel — grátis)
+
+1. Crie uma conta em [vercel.com](https://vercel.com) e conecte sua conta do GitHub.
+2. Clique em **Add New → Project** e selecione o repositório `felipeprojetos`.
+3. Em **Environment Variables**, adicione:
+   - `DATABASE_URL` → a connection string do Neon (passo anterior)
+   - `NEXT_PUBLIC_APP_URL` → deixe em branco na primeira vez (a Vercel te dará o domínio depois do primeiro deploy); depois volte aqui e preencha com a URL final (ex: `https://seu-app.vercel.app`) e redeploy
+4. Clique em **Deploy**. O comando de build já executa `prisma db push`, então as tabelas são criadas automaticamente — não precisa rodar migração manual.
+
+### 3. Upload de arquivos em produção (Vercel Blob — grátis)
+
+Sem isso, os uploads de novas revisões falham em produção (o disco da Vercel não é persistente).
+
+1. No projeto na Vercel, vá em **Storage → Create Database → Blob**.
+2. Conecte o Blob store ao projeto — a Vercel injeta `BLOB_READ_WRITE_TOKEN` automaticamente nas variáveis de ambiente.
+3. Redeploy o projeto para a variável ser aplicada.
+
+### 4. Popular dados de demonstração em produção (opcional)
+
+Rode o seed localmente uma vez, apontando para o mesmo banco/blob de produção:
+
+```bash
+DATABASE_URL="<connection string do Neon>" BLOB_READ_WRITE_TOKEN="<token do Vercel Blob>" npm run db:seed
+```
+
+Depois disso, o link público (`https://seu-app.vercel.app`) já mostra os dados de exemplo para quem você enviar.
+
+> **Nota:** o comando de build (`prisma db push --accept-data-loss`) sincroniza o schema automaticamente a cada deploy — ótimo para manter isso simples, mas se um dia remover uma coluna/tabela do schema, os dados dela são perdidos no próximo deploy. Para um projeto com mais gente usando de verdade, migre para `prisma migrate deploy` com migrations versionadas.
 
 ## Estrutura principal
 

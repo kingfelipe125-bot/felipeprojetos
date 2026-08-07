@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { nanoid } from "nanoid";
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
+import { put } from "@vercel/blob";
 import { formatRevisionLabel } from "../src/lib/revision";
 import { STATUS_LABELS, type DocumentStatus } from "../src/lib/constants";
 
@@ -11,8 +12,14 @@ const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
 
 async function writeDummyFile(label: string) {
   const fileName = `seed-${nanoid(10)}.pdf`;
-  await mkdir(UPLOAD_DIR, { recursive: true });
   const content = `Arquivo de demonstração — ${label}\nGerenciador de Versões CAD/BIM\n`;
+
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    const blob = await put(fileName, content, { access: "public", contentType: "application/pdf" });
+    return { fileUrl: blob.url, fileSize: Buffer.byteLength(content) };
+  }
+
+  await mkdir(UPLOAD_DIR, { recursive: true });
   await writeFile(path.join(UPLOAD_DIR, fileName), content, "utf-8");
   return { fileUrl: `/uploads/${fileName}`, fileSize: Buffer.byteLength(content) };
 }
