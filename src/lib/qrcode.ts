@@ -5,6 +5,8 @@ export function getAppUrl() {
   // Fallbacks automáticos da Vercel: domínio de produção, senão a URL do deployment atual.
   if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  // Render injeta a URL pública automaticamente para Web Services.
+  if (process.env.RENDER_EXTERNAL_URL) return process.env.RENDER_EXTERNAL_URL;
   return "http://localhost:3000";
 }
 

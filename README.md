@@ -40,9 +40,23 @@ Acesse http://localhost:3000.
 
 O seed (`prisma/seed.ts`) cria 2 projetos, 4 usuários e documentos em diferentes estágios do workflow — incluindo um documento com uma revisão obsoleta e outra aprovada, para testar o fluxo de QR Code imediatamente. Os códigos de verificação gerados são exibidos no terminal ao final do seed (`/v/<code>`).
 
-## Deploy público (Vercel + Neon)
+## Deploy público (Render — automático, um clique)
 
-Este é o caminho recomendado para ter uma URL pública (`https://seu-app.vercel.app`) para compartilhar.
+Este é o caminho mais simples: o repositório já inclui um `render.yaml` que cria o site **e** o banco de dados juntos, já conectados, e popula os dados de demonstração automaticamente — sem precisar copiar nenhuma connection string.
+
+1. Crie uma conta em [render.com](https://render.com) (pode entrar direto com o GitHub).
+2. No painel, clique em **New → Blueprint**.
+3. Selecione o repositório `felipeprojetos`.
+4. O Render lê o `render.yaml` e mostra o que vai criar (o app + um banco Postgres grátis). Clique em **Apply** (ou "Create New Resources").
+5. Aguarde o build terminar (a barra de progresso mostra "Live" quando termina).
+
+Pronto — a URL pública aparece no topo da página do serviço (algo como `https://cad-bim-version-manager.onrender.com`), já com os dados de demonstração carregados.
+
+> **Nota:** o banco Postgres grátis do Render expira após 90 dias (o Render avisa por e-mail antes). Uploads de novas revisões funcionam, mas o plano grátis não tem disco persistente — arquivos enviados por usuários podem se perder se o serviço reiniciar. Para persistência total, seria necessário um plano pago com "Disk" ou trocar para um storage externo (mesma ideia do Vercel Blob, ver seção abaixo).
+
+## Alternativa: Vercel + Neon
+
+Este caminho dá mais controle (domínio, storage de arquivos com Vercel Blob), mas exige configurar 2-3 serviços separadamente.
 
 ### 1. Banco de dados (Neon — grátis)
 

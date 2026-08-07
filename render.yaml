@@ -1,0 +1,20 @@
+databases:
+  - name: cad-bim-db
+    plan: free
+    databaseName: cadbim
+    user: cadbim
+
+services:
+  - type: web
+    name: cad-bim-version-manager
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build && npm run db:seed
+    startCommand: npx next start -p $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cad-bim-db
+          property: connectionString
+      - key: NODE_VERSION
+        value: 20.11.0
