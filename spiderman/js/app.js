@@ -59,15 +59,24 @@
 
     return (
       '<article class="chapter" id="' + filme.id + '">' +
-        '<div class="chapter-media">' +
-          '<span class="chapter-media-tag">' + filme.ano + "</span>" +
-          '<img src="' + filme.poster + '" alt="Capa do filme ' + filme.titulo + '" loading="lazy">' +
+        '<div class="chapter-banner">' +
+          '<div class="chapter-banner-bg" style="background-image:url(\'' + filme.poster + '\')"></div>' +
+          '<span class="chapter-banner-tag">' + filme.ano + "</span>" +
+          '<div class="chapter-banner-fg">' +
+            '<img src="' + filme.poster + '" alt="Capa do filme ' + filme.titulo + '" loading="lazy">' +
+          "</div>" +
+          '<div class="chapter-banner-fade"></div>' +
         "</div>" +
-        '<div class="chapter-content">' +
-          '<span class="chapter-num">Capítulo ' + num + "</span>" +
-          '<p class="chapter-year">' + filme.ano + "</p>" +
-          '<h2 class="chapter-title">' + filme.titulo + "</h2>" +
-          '<p class="chapter-note">' + filme.nota + "</p>" +
+        '<div class="chapter-body">' +
+          '<div class="chapter-head">' +
+            '<span class="chapter-ghost">' + num + "</span>" +
+            '<span class="chapter-num">Capítulo ' + num + "</span>" +
+            "<div>" +
+              '<p class="chapter-year">' + filme.ano + "</p>" +
+              '<h2 class="chapter-title">' + filme.titulo + "</h2>" +
+              '<p class="chapter-note">' + filme.nota + "</p>" +
+            "</div>" +
+          "</div>" +
           subBlocks +
         "</div>" +
       "</article>"
@@ -81,7 +90,7 @@
 
   function setupScrollReveal() {
     const targets = document.querySelectorAll(
-      ".chapter-media, .chapter-content, .mini-card, .outro"
+      ".chapter-banner-fg, .chapter-head, .mini-card, .outro"
     );
     const observer = new IntersectionObserver(
       function (entries) {
@@ -97,18 +106,18 @@
   }
 
   function setupParallax() {
-    const images = Array.prototype.slice.call(
-      document.querySelectorAll(".chapter-media img")
+    const layers = Array.prototype.slice.call(
+      document.querySelectorAll(".chapter-banner-bg")
     );
     let ticking = false;
 
     function update() {
       const vh = window.innerHeight;
-      images.forEach(function (img) {
-        const rect = img.parentElement.getBoundingClientRect();
+      layers.forEach(function (layer) {
+        const rect = layer.parentElement.getBoundingClientRect();
         const center = rect.top + rect.height / 2 - vh / 2;
-        const shift = Math.max(-24, Math.min(24, center * -0.06));
-        img.style.transform = "translateY(" + shift + "px)";
+        const shift = Math.max(-30, Math.min(30, center * -0.08));
+        layer.style.transform = "scale(1.1) translateY(" + shift + "px)";
       });
       ticking = false;
     }
@@ -129,22 +138,38 @@
 
   function playCover() {
     const cover = document.getElementById("cover");
+    const enterBtn = document.getElementById("cover-enter");
     const site = document.getElementById("site");
+    let entered = false;
+
+    document.body.classList.add("locked");
 
     function enter() {
+      if (entered) return;
+      entered = true;
       cover.classList.add("hide");
       site.classList.add("show");
       site.removeAttribute("aria-hidden");
+      document.body.classList.remove("locked");
+      window.removeEventListener("wheel", enter);
+      window.removeEventListener("touchmove", enter);
+      window.removeEventListener("keydown", onKey);
     }
 
-    window.setTimeout(enter, 2500);
-    cover.addEventListener("click", enter);
+    function onKey(e) {
+      if (e.key === "ArrowDown" || e.key === " " || e.key === "Enter") enter();
+    }
+
+    enterBtn.addEventListener("click", enter);
+    window.addEventListener("wheel", enter, { passive: true });
+    window.addEventListener("touchmove", enter, { passive: true });
+    window.addEventListener("keydown", onKey);
   }
 
   function setupOutro() {
     const btn = document.getElementById("btn-reiniciar");
     btn.addEventListener("click", function () {
-      document.getElementById("topo").scrollIntoView({ behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
   }
 
