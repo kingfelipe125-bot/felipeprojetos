@@ -510,6 +510,23 @@ body.locked {
   line-height: 1.6;
 }
 
+.mini-card-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: linear-gradient(160deg, var(--bg-raised), var(--bg-card));
+  border-left: 2px solid var(--red);
+}
+
+.mini-card-text .mini-body {
+  padding: 28px 26px;
+}
+
+.mini-card-text .mini-note {
+  font-size: 14px;
+  line-height: 1.7;
+}
+
 @media (max-width: 640px) {
   .chapter-banner {
     height: min(56vh, 560px);
