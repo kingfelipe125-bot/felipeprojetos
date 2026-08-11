@@ -96,7 +96,13 @@ const FILMES = [
     poster: "assets/capas/sem-volta-pra-casa.jpg",
     nota: "Um feitiço malsucedido rompe o multiverso, trazendo vilões de outras realidades para enfrentar Peter Parker.",
     resumo: "Com sua identidade secreta revelada, Peter Parker pede ajuda a Doutor Estranho para que o mundo esqueça que ele é o Homem-Aranha. O feitiço dá errado e abre portas para vilões de outras realidades que conhecem o Homem-Aranha, mas não o Peter Parker deste universo.",
-    trajes: [],
+    trajes: [
+      {
+        nome: "Traje Integrado",
+        imagem: "assets/trajes/traje-integrado-nwh.png",
+        nota: "Mesmo traje apresentado em Homem-Aranha: Longe de Casa (2019), usado por Peter Parker no início do filme, antes do feitiço de Doutor Estranho.",
+      },
+    ],
     viloes: [
       {
         nome: "Doutor Octopus",
