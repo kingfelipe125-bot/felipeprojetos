@@ -32,27 +32,53 @@
     );
   }
 
+  function resumoCard(filme) {
+    return (
+      '<article class="mini-card mini-card-text">' +
+        '<div class="mini-body">' +
+          '<span class="mini-tag">Sinopse</span>' +
+          "<h4>" + filme.titulo + "</h4>" +
+          '<p class="mini-note">' + filme.resumo + "</p>" +
+        "</div>" +
+      "</article>"
+    );
+  }
+
   function chapterBlock(filme, index) {
     const num = String(index + 1).padStart(2, "0");
 
     let subBlocks = "";
+    const temViloes = filme.viloes.length > 0;
+    const temTrajes = filme.trajes.length > 0;
 
-    if (filme.trajes.length) {
+    if (temTrajes) {
       subBlocks +=
         '<div class="chapter-sub">' +
           "<h3>Trajes deste filme</h3>" +
           '<div class="mini-grid">' +
             filme.trajes.map(trajeCard).join("") +
+            (temViloes ? "" : resumoCard(filme)) +
           "</div>" +
         "</div>";
     }
 
-    if (filme.viloes.length) {
+    if (temViloes) {
       subBlocks +=
         '<div class="chapter-sub">' +
           "<h3>Vilões deste filme</h3>" +
           '<div class="mini-grid">' +
             filme.viloes.map(vilaoCard).join("") +
+            resumoCard(filme) +
+          "</div>" +
+        "</div>";
+    }
+
+    if (!temTrajes && !temViloes) {
+      subBlocks +=
+        '<div class="chapter-sub">' +
+          "<h3>Sobre o filme</h3>" +
+          '<div class="mini-grid">' +
+            resumoCard(filme) +
           "</div>" +
         "</div>";
     }
