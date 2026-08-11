@@ -43,7 +43,13 @@ const FILMES = [
     ano: 2019,
     poster: "assets/capas/ultimato.webp",
     nota: "Desfecho da saga do Infinito, com o retorno de Peter Parker à batalha final contra Thanos, ainda com o Traje Aranha de Ferro apresentado em Guerra Infinita.",
-    trajes: [],
+    trajes: [
+      {
+        nome: "Traje Aranha de Ferro",
+        imagem: "assets/trajes/traje-aranha-de-ferro.png",
+        nota: "Mesmo equipamento apresentado em Vingadores: Guerra Infinita (2018), usado novamente na batalha final contra Thanos.",
+      },
+    ],
     viloes: [],
   },
   {
