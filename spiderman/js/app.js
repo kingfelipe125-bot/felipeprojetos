@@ -1,101 +1,144 @@
 (function () {
   "use strict";
 
-  function renderFilmes() {
-    const container = document.querySelector(".grid-filmes");
-    container.innerHTML = FILMES.map(function (filme) {
-      return (
-        '<article class="card card-filme">' +
-          '<div class="poster-frame">' +
-            '<img src="' + filme.poster + '" alt="Capa do filme ' + filme.titulo + '" loading="lazy">' +
-          "</div>" +
-          '<div class="card-body">' +
-            '<p class="card-ano">' + filme.ano + "</p>" +
-            "<h3>" + filme.titulo + "</h3>" +
-          "</div>" +
-        "</article>"
-      );
-    }).join("");
+  function trajeCard(traje) {
+    return (
+      '<article class="mini-card">' +
+        '<div class="mini-frame">' +
+          '<img src="' + traje.imagem + '" alt="' + traje.nome + '" loading="lazy">' +
+        "</div>" +
+        '<div class="mini-body">' +
+          '<span class="mini-tag">Traje</span>' +
+          "<h4>" + traje.nome + "</h4>" +
+          '<p class="mini-note">' + traje.nota + "</p>" +
+        "</div>" +
+      "</article>"
+    );
   }
 
-  function renderTrajes() {
-    const container = document.querySelector(".grid-trajes");
-    container.innerHTML = TRAJES.map(function (traje) {
-      return (
-        '<article class="card card-item">' +
-          '<div class="item-frame">' +
-            '<img src="' + traje.imagem + '" alt="' + traje.nome + '" loading="lazy">' +
-          "</div>" +
-          '<div class="card-body">' +
-            '<span class="item-tag">Traje</span>' +
-            "<h3>" + traje.nome + "</h3>" +
-            '<div class="item-meta">' +
-              '<span class="meta-filme">' + traje.filme + "</span>" +
-              '<span class="meta-ano">' + traje.ano + "</span>" +
-            "</div>" +
-            '<p class="item-nota">' + traje.nota + "</p>" +
-          "</div>" +
-        "</article>"
-      );
-    }).join("");
+  function vilaoCard(vilao) {
+    return (
+      '<article class="mini-card">' +
+        '<div class="mini-frame">' +
+          '<img src="' + vilao.imagem + '" alt="' + vilao.nome + '" loading="lazy">' +
+        "</div>" +
+        '<div class="mini-body">' +
+          '<span class="mini-tag">Vilão</span>' +
+          "<h4>" + vilao.nome + "</h4>" +
+          '<p class="mini-sub">' + vilao.identidade + " &middot; " + vilao.ator + "</p>" +
+          '<p class="mini-note">' + vilao.nota + "</p>" +
+        "</div>" +
+      "</article>"
+    );
   }
 
-  function renderViloes() {
-    const container = document.querySelector(".grid-viloes");
-    container.innerHTML = VILOES.map(function (vilao) {
-      return (
-        '<article class="card card-item">' +
-          '<div class="item-frame">' +
-            '<img src="' + vilao.imagem + '" alt="' + vilao.nome + '" loading="lazy">' +
+  function chapterBlock(filme, index) {
+    const num = String(index + 1).padStart(2, "0");
+
+    let subBlocks = "";
+
+    if (filme.trajes.length) {
+      subBlocks +=
+        '<div class="chapter-sub">' +
+          "<h3>Trajes deste filme</h3>" +
+          '<div class="mini-grid">' +
+            filme.trajes.map(trajeCard).join("") +
           "</div>" +
-          '<div class="card-body">' +
-            '<span class="item-tag">Vilão</span>' +
-            "<h3>" + vilao.nome + "</h3>" +
-            '<p class="item-sub">' + vilao.identidade + " &middot; interpretado por " + vilao.ator + "</p>" +
-            '<div class="item-meta">' +
-              '<span class="meta-filme">' + vilao.filme + "</span>" +
-              '<span class="meta-ano">' + vilao.ano + "</span>" +
-            "</div>" +
-            '<p class="item-nota">' + vilao.nota + "</p>" +
+        "</div>";
+    }
+
+    if (filme.viloes.length) {
+      subBlocks +=
+        '<div class="chapter-sub">' +
+          "<h3>Vilões deste filme</h3>" +
+          '<div class="mini-grid">' +
+            filme.viloes.map(vilaoCard).join("") +
           "</div>" +
-        "</article>"
-      );
-    }).join("");
+        "</div>";
+    }
+
+    return (
+      '<article class="chapter" id="' + filme.id + '">' +
+        '<div class="chapter-media">' +
+          '<span class="chapter-media-tag">' + filme.ano + "</span>" +
+          '<img src="' + filme.poster + '" alt="Capa do filme ' + filme.titulo + '" loading="lazy">' +
+        "</div>" +
+        '<div class="chapter-content">' +
+          '<span class="chapter-num">Capítulo ' + num + "</span>" +
+          '<p class="chapter-year">' + filme.ano + "</p>" +
+          '<h2 class="chapter-title">' + filme.titulo + "</h2>" +
+          '<p class="chapter-note">' + filme.nota + "</p>" +
+          subBlocks +
+        "</div>" +
+      "</article>"
+    );
+  }
+
+  function renderTimeline() {
+    const container = document.querySelector(".timeline");
+    container.innerHTML = FILMES.map(chapterBlock).join("");
   }
 
   function setupScrollReveal() {
-    const targets = document.querySelectorAll(".card, .outro");
+    const targets = document.querySelectorAll(
+      ".chapter-media, .chapter-content, .mini-card, .outro"
+    );
     const observer = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("in-view");
-            observer.unobserve(entry.target);
-          }
+          entry.target.classList.toggle("reveal", entry.isIntersecting);
         });
       },
-      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+      { threshold: 0.18, rootMargin: "0px 0px -60px 0px" }
     );
     targets.forEach(function (el) {
       observer.observe(el);
     });
   }
 
-  function playIntro() {
-    const introScreen = document.getElementById("intro-screen");
+  function setupParallax() {
+    const images = Array.prototype.slice.call(
+      document.querySelectorAll(".chapter-media img")
+    );
+    let ticking = false;
+
+    function update() {
+      const vh = window.innerHeight;
+      images.forEach(function (img) {
+        const rect = img.parentElement.getBoundingClientRect();
+        const center = rect.top + rect.height / 2 - vh / 2;
+        const shift = Math.max(-24, Math.min(24, center * -0.06));
+        img.style.transform = "translateY(" + shift + "px)";
+      });
+      ticking = false;
+    }
+
+    window.addEventListener(
+      "scroll",
+      function () {
+        if (!ticking) {
+          window.requestAnimationFrame(update);
+          ticking = true;
+        }
+      },
+      { passive: true }
+    );
+
+    update();
+  }
+
+  function playCover() {
+    const cover = document.getElementById("cover");
     const site = document.getElementById("site");
 
-    window.setTimeout(function () {
-      introScreen.classList.add("hide");
+    function enter() {
+      cover.classList.add("hide");
       site.classList.add("show");
       site.removeAttribute("aria-hidden");
-    }, 2200);
+    }
 
-    introScreen.addEventListener("click", function () {
-      introScreen.classList.add("hide");
-      site.classList.add("show");
-      site.removeAttribute("aria-hidden");
-    });
+    window.setTimeout(enter, 2500);
+    cover.addEventListener("click", enter);
   }
 
   function setupOutro() {
@@ -106,11 +149,10 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    renderFilmes();
-    renderTrajes();
-    renderViloes();
+    renderTimeline();
     setupScrollReveal();
+    setupParallax();
     setupOutro();
-    playIntro();
+    playCover();
   });
 })();
