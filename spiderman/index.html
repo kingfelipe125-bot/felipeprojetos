@@ -41,6 +41,7 @@
           <a href="#guerra-infinita">2018</a>
           <a href="#longe-de-casa">2019</a>
           <a href="#sem-volta-pra-casa">2021</a>
+          <a href="#trajes-galeria">Trajes</a>
           <a href="#cronologia">Cronologia</a>
         </nav>
       </div>
@@ -48,6 +49,15 @@
 
     <main>
       <div class="timeline"></div>
+
+      <section id="trajes-galeria" class="galeria">
+        <div class="galeria-head">
+          <span class="galeria-kicker">Arsenal</span>
+          <h2>Todos os trajes</h2>
+          <p>Arraste para o lado para ver todos. Clique em um traje para conhecer sua tecnologia.</p>
+        </div>
+        <div class="galeria-track" id="galeria-track"></div>
+      </section>
 
       <section id="cronologia" class="cronologia">
         <div class="cronologia-head">
@@ -73,6 +83,21 @@
   <div id="lightbox" class="lightbox" aria-hidden="true">
     <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Fechar imagem ampliada">&times;</button>
     <img id="lightbox-img" src="" alt="Cronologia completa da Marvel, ampliada">
+  </div>
+
+  <div id="traje-modal" class="traje-modal" aria-hidden="true">
+    <div class="traje-modal-panel">
+      <button type="button" class="traje-modal-close" id="traje-modal-close" aria-label="Fechar detalhes do traje">&times;</button>
+      <div class="traje-modal-media">
+        <img id="traje-modal-img" src="" alt="">
+      </div>
+      <div class="traje-modal-body">
+        <span class="traje-modal-tag">Tecnologia</span>
+        <h3 id="traje-modal-nome"></h3>
+        <p class="traje-modal-meta" id="traje-modal-meta"></p>
+        <p class="traje-modal-tecnologia" id="traje-modal-tecnologia"></p>
+      </div>
+    </div>
   </div>
 
   <script src="js/data.js"></script>

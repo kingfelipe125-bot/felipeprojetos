@@ -230,12 +230,121 @@
     });
   }
 
+  function setupTrajeModal() {
+    const modal = document.getElementById("traje-modal");
+    const closeBtn = document.getElementById("traje-modal-close");
+    if (!modal || !closeBtn) {
+      return { open: function () {} };
+    }
+
+    function close() {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("locked");
+    }
+
+    function open(item) {
+      if (!item) return;
+      const img = document.getElementById("traje-modal-img");
+      const nome = document.getElementById("traje-modal-nome");
+      const meta = document.getElementById("traje-modal-meta");
+      const tecnologia = document.getElementById("traje-modal-tecnologia");
+      if (!img || !nome || !meta || !tecnologia) return;
+
+      img.setAttribute("src", item.imagem || "");
+      img.setAttribute("alt", item.nome || "");
+      nome.textContent = item.nome || "";
+      meta.textContent = [item.filmes, item.ano].filter(Boolean).join(" · ");
+      tecnologia.textContent = item.tecnologia || "";
+
+      modal.classList.add("open");
+      modal.removeAttribute("aria-hidden");
+      document.body.classList.add("locked");
+    }
+
+    closeBtn.addEventListener("click", close);
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) close();
+    });
+    window.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") close();
+    });
+
+    return { open: open };
+  }
+
+  function trajeGaleriaCard(traje, index) {
+    return (
+      '<article class="galeria-card" data-index="' + index + '">' +
+        '<div class="galeria-frame">' +
+          '<img src="' + traje.imagem + '" alt="' + traje.nome + '" loading="lazy" draggable="false">' +
+        "</div>" +
+        '<div class="galeria-body">' +
+          "<h4>" + traje.nome + "</h4>" +
+          '<span class="galeria-hint">Ver tecnologia</span>' +
+        "</div>" +
+      "</article>"
+    );
+  }
+
+  function setupGaleria(modalApi) {
+    const track = document.getElementById("galeria-track");
+    if (!track || typeof TRAJES_TECH === "undefined") return;
+
+    track.innerHTML = TRAJES_TECH.map(trajeGaleriaCard).join("");
+
+    let isDown = false;
+    let dragged = false;
+    let startX = 0;
+    let startScroll = 0;
+
+    function onDown(e) {
+      isDown = true;
+      dragged = false;
+      startX = e.pageX;
+      startScroll = track.scrollLeft;
+      track.classList.add("dragging");
+    }
+
+    function onMove(e) {
+      if (!isDown) return;
+      const dx = e.pageX - startX;
+      if (Math.abs(dx) > 5) dragged = true;
+      track.scrollLeft = startScroll - dx;
+    }
+
+    function onUp() {
+      if (!isDown) return;
+      isDown = false;
+      track.classList.remove("dragging");
+    }
+
+    track.addEventListener("mousedown", onDown);
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    window.addEventListener("blur", onUp);
+
+    track.addEventListener("click", function (e) {
+      if (dragged) {
+        dragged = false;
+        return;
+      }
+      const card = e.target.closest(".galeria-card");
+      if (!card) return;
+      const idx = Number(card.getAttribute("data-index"));
+      if (Number.isNaN(idx)) return;
+      modalApi.open(TRAJES_TECH[idx]);
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     renderTimeline();
     setupScrollReveal();
     setupParallax();
     setupOutro();
     setupLightbox();
+    const trajeModal = setupTrajeModal();
+    setupGaleria(trajeModal);
     playCover();
 
     if (window.location.hash) {
