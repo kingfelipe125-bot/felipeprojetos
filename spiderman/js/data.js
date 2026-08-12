@@ -144,3 +144,46 @@ const FILMES = [
     ],
   },
 ];
+
+const TRAJES_TECH = [
+  {
+    id: "homecoming",
+    nome: "Traje Homecoming",
+    filmes: "Homem-Aranha: De Volta ao Lar",
+    ano: "2017",
+    imagem: "assets/trajes/traje-homecoming.png",
+    tecnologia: "Criado por Tony Stark a partir do traje improvisado que Peter Parker já usava, com a IA Karen integrada ao capacete para auxiliar em combate, mira e navegação. Conta com mais de cem configurações de teia diferentes, incluindo teia elétrica e rede de contenção, além de aranhas-drone camufladas nas costas e um sistema de \"Modo Instrutor\" que limita os recursos até serem liberados por Stark.",
+  },
+  {
+    id: "aranha-de-ferro",
+    nome: "Traje Aranha de Ferro",
+    filmes: "Vingadores: Guerra Infinita e Vingadores: Ultimato",
+    ano: "2018 e 2019",
+    imagem: "assets/trajes/traje-aranha-de-ferro.png",
+    tecnologia: "Desenvolvido por Tony Stark com nanotecnologia semelhante à das armaduras Homem de Ferro. Possui quatro braços mecânicos retráteis instalados nas costas, usados tanto para ataque quanto para deslocamento e escalada. O tecido reforça a resistência a impactos e mantém a conexão com a IA Karen, presente nos modelos anteriores.",
+  },
+  {
+    id: "furtivo",
+    nome: "Traje Furtivo",
+    filmes: "Homem-Aranha: Longe de Casa",
+    ano: "2019",
+    imagem: "assets/trajes/traje-furtivo.png",
+    tecnologia: "Uniforme tático cedido por Nick Fury para operações discretas, com tecido preto fosco que absorve luz e reduz a visibilidade. A máscara conta com sensores de movimento e comunicação direta com o sistema E.D.I.T.H., a rede de óculos de realidade aumentada e controle de arsenal deixada por Tony Stark para Peter.",
+  },
+  {
+    id: "aprimorado",
+    nome: "Traje Aprimorado",
+    filmes: "Homem-Aranha: Longe de Casa",
+    ano: "2019",
+    imagem: "assets/trajes/traje-aprimorado.png",
+    tecnologia: "Primeiro traje desenhado inteiramente por Peter Parker, sem participação de Tony Stark, costurado a partir do próprio uniforme furtivo. Mantém o acesso ao sistema E.D.I.T.H. e traz lançadores de teia revisados, marcando a primeira identidade visual criada pelo próprio herói.",
+  },
+  {
+    id: "integrado",
+    nome: "Traje Integrado",
+    filmes: "Homem-Aranha: Longe de Casa e Homem-Aranha: Sem Volta Pra Casa",
+    ano: "2019 e 2021",
+    imagem: "assets/trajes/traje-integrado.png",
+    tecnologia: "Versão avançada construída com apoio da tecnologia E.D.I.T.H., utilizada no confronto final contra Mysterio em Londres e reaproveitada por Peter no início de Sem Volta Pra Casa. Conta com reforço estrutural nas juntas e um padrão de teia entrelaçado por todo o tecido.",
+  },
+];
