@@ -199,11 +199,43 @@
     });
   }
 
+  function setupLightbox() {
+    const opener = document.getElementById("cronologia-open");
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightbox-img");
+    const closeBtn = document.getElementById("lightbox-close");
+    if (!opener || !lightbox) return;
+
+    function open() {
+      const fullSrc = opener.querySelector("img").getAttribute("src");
+      lightboxImg.setAttribute("src", fullSrc);
+      lightbox.classList.add("open");
+      lightbox.removeAttribute("aria-hidden");
+      document.body.classList.add("locked");
+    }
+
+    function close() {
+      lightbox.classList.remove("open");
+      lightbox.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("locked");
+    }
+
+    opener.addEventListener("click", open);
+    closeBtn.addEventListener("click", close);
+    lightbox.addEventListener("click", function (e) {
+      if (e.target === lightbox) close();
+    });
+    window.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") close();
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     renderTimeline();
     setupScrollReveal();
     setupParallax();
     setupOutro();
+    setupLightbox();
     playCover();
   });
 })();
