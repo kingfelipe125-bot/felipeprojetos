@@ -8,6 +8,11 @@ const FILMES = [
     resumo: "Depois de ajudar os Vingadores em Berlim, Peter Parker volta à rotina de estudante no Queens, ansioso para provar que está pronto para mais responsabilidades. Ele acaba investigando por conta própria um esquema de armas alienígenas comandado pelo Abutre, o que o coloca em rota de colisão com Tony Stark.",
     trajes: [
       {
+        nome: "Homemade Suit",
+        imagem: "assets/trajes/homemade-suit.png",
+        nota: "Uniforme improvisado por Peter Parker antes de receber qualquer equipamento de Tony Stark, feito de moletom e óculos de esqui.",
+      },
+      {
         nome: "Traje Homecoming",
         imagem: "assets/trajes/traje-homecoming.png",
         nota: "Primeiro traje avançado entregue por Tony Stark a Peter Parker, equipado com recursos tecnológicos da Stark Industries.",
@@ -118,6 +123,16 @@ const FILMES = [
         imagem: "assets/trajes/traje-integrado-nwh.png",
         nota: "Mesmo traje apresentado em Homem-Aranha: Longe de Casa (2019), usado por Peter Parker no início do filme, antes do feitiço de Doutor Estranho.",
       },
+      {
+        nome: "Traje Preto e Dourado",
+        imagem: "assets/trajes/traje-preto-e-dourado.png",
+        nota: "Uniforme criado por Peter após perder o acesso à tecnologia de Tony Stark, com lançadores de teia próprios e visual inspirado nos quadrinhos.",
+      },
+      {
+        nome: "Traje Vermelho e Azul",
+        imagem: "assets/trajes/traje-vermelho-e-azul.png",
+        nota: "Uniforme montado por Peter com a ajuda de Ned, usado na batalha final contra os vilões do multiverso nas ruínas da Estátua da Liberdade.",
+      },
     ],
     viloes: [
       {
@@ -146,6 +161,14 @@ const FILMES = [
 ];
 
 const TRAJES_TECH = [
+  {
+    id: "homemade",
+    nome: "Homemade Suit",
+    filmes: "Homem-Aranha: De Volta ao Lar",
+    ano: "2016 e 2017",
+    imagem: "assets/trajes/homemade-suit.png",
+    tecnologia: "Primeiro uniforme de Peter Parker, costurado por ele mesmo antes de receber qualquer equipamento de Tony Stark. Feito de moletom vermelho e azul, óculos de esqui no lugar das lentes e lançadores de teia artesanais presos aos punhos, sem nenhum recurso tecnológico embarcado.",
+  },
   {
     id: "homecoming",
     nome: "Traje Homecoming",
@@ -185,5 +208,21 @@ const TRAJES_TECH = [
     ano: "2019 e 2021",
     imagem: "assets/trajes/traje-integrado.png",
     tecnologia: "Versão avançada construída com apoio da tecnologia E.D.I.T.H., utilizada no confronto final contra Mysterio em Londres e reaproveitada por Peter no início de Sem Volta Pra Casa. Conta com reforço estrutural nas juntas e um padrão de teia entrelaçado por todo o tecido.",
+  },
+  {
+    id: "preto-e-dourado",
+    nome: "Traje Preto e Dourado",
+    filmes: "Homem-Aranha: Sem Volta Pra Casa",
+    ano: "2021",
+    imagem: "assets/trajes/traje-preto-e-dourado.png",
+    tecnologia: "Uniforme criado por Peter Parker depois de perder o acesso à tecnologia de Tony Stark, com um tecido que se adapta ao corpo e um desenho de teias douradas que remete a outras versões do Homem-Aranha nos quadrinhos. Mantém lançadores de teia funcionais mesmo sem o suporte de Stark Industries.",
+  },
+  {
+    id: "vermelho-e-azul",
+    nome: "Traje Vermelho e Azul",
+    filmes: "Homem-Aranha: Sem Volta Pra Casa",
+    ano: "2021",
+    imagem: "assets/trajes/traje-vermelho-e-azul.png",
+    tecnologia: "Uniforme montado por Peter com a ajuda de Ned Leeds, unindo o vermelho e o azul clássicos do herói. Usado na batalha final contra os vilões do multiverso, marca o retorno a um visual mais próximo da identidade original do Homem-Aranha, sem depender de tecnologia externa.",
   },
 ];
