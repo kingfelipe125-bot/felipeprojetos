@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Tênis — Mouse Raquete</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ===== TELA DE MENU ===== -->
+  <section id="screen-menu" class="screen active">
+    <div class="menu-box">
+      <h1 class="title">🎾 TÊNIS</h1>
+      <p class="subtitle">Mova o mouse para controlar sua raquete. O adversário sempre saca.</p>
+
+      <div class="menu-group">
+        <h2>Dificuldade</h2>
+        <div class="option-grid" id="difficulty-grid">
+          <button class="option-card" data-difficulty="facil">
+            <span class="option-icon">🙂</span>
+            <span class="option-name">Fácil</span>
+            <span class="option-desc">Saque lento, CPU erra bastante</span>
+          </button>
+          <button class="option-card" data-difficulty="medio">
+            <span class="option-icon">😐</span>
+            <span class="option-name">Médio</span>
+            <span class="option-desc">Ritmo equilibrado</span>
+          </button>
+          <button class="option-card" data-difficulty="dificil">
+            <span class="option-icon">😤</span>
+            <span class="option-name">Difícil</span>
+            <span class="option-desc">CPU rápida e precisa</span>
+          </button>
+          <button class="option-card boss" data-difficulty="chefao">
+            <span class="option-icon">👑</span>
+            <span class="option-name">Chefão</span>
+            <span class="option-desc">Saque bomba e quase sem erros</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="menu-group">
+        <h2>Quadra</h2>
+        <div class="option-grid" id="court-grid">
+          <button class="option-card court-preview court-dura" data-court="dura">
+            <span class="option-icon">🔷</span>
+            <span class="option-name">Dura (Azul)</span>
+            <span class="option-desc">Piso duro, bote médio</span>
+          </button>
+          <button class="option-card court-preview court-cyber" data-court="cyber">
+            <span class="option-icon">🟣</span>
+            <span class="option-name">Cyber</span>
+            <span class="option-desc">Néon, bote rápido</span>
+          </button>
+          <button class="option-card court-preview court-grama" data-court="grama">
+            <span class="option-icon">🟢</span>
+            <span class="option-name">Grama</span>
+            <span class="option-desc">Bote baixo e rápido</span>
+          </button>
+        </div>
+      </div>
+
+      <button id="btn-play" class="btn-primary">Jogar ▶</button>
+      <p class="footnote">Melhor de 3 sets · Regras oficiais de pontuação do tênis</p>
+    </div>
+  </section>
+
+  <!-- ===== TELA DE JOGO ===== -->
+  <section id="screen-game" class="screen">
+    <header class="hud">
+      <div class="scoreboard" id="scoreboard">
+        <div class="score-row score-header">
+          <span class="score-name"></span>
+          <span class="score-sets-wrap" id="sets-header"></span>
+          <span class="score-games">Games</span>
+          <span class="score-points">Pontos</span>
+        </div>
+        <div class="score-row" id="row-player">
+          <span class="score-name">Você</span>
+          <span class="score-sets-wrap" id="sets-player"></span>
+          <span class="score-games" id="games-player">0</span>
+          <span class="score-points" id="points-player">0</span>
+        </div>
+        <div class="score-row" id="row-cpu">
+          <span class="score-name" id="cpu-name">CPU</span>
+          <span class="score-sets-wrap" id="sets-cpu"></span>
+          <span class="score-games" id="games-cpu">0</span>
+          <span class="score-points" id="points-cpu">0</span>
+        </div>
+      </div>
+      <div class="hud-buttons">
+        <button id="btn-pause" title="Pausar">⏸</button>
+        <button id="btn-menu" title="Voltar ao menu">☰</button>
+      </div>
+    </header>
+
+    <div class="court-wrap">
+      <canvas id="court" width="1000" height="420"></canvas>
+      <div id="message-overlay"></div>
+      <div id="pause-overlay" class="overlay hidden">
+        <div class="overlay-box">
+          <h2>Pausado</h2>
+          <button id="btn-resume" class="btn-primary">Continuar</button>
+          <button id="btn-quit" class="btn-secondary">Sair para o menu</button>
+        </div>
+      </div>
+      <div id="end-overlay" class="overlay hidden">
+        <div class="overlay-box">
+          <h2 id="end-title">Fim de partida</h2>
+          <p id="end-detail"></p>
+          <button id="btn-rematch" class="btn-primary">Jogar novamente</button>
+          <button id="btn-back-menu" class="btn-secondary">Menu</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="hint">Mova o mouse pela quadra para posicionar e rebater a bola. Você não precisa sacar — o adversário saca sempre.</p>
+  </section>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
