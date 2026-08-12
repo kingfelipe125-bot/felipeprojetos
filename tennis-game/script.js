@@ -16,8 +16,7 @@ const NET_HEIGHT_POST = 1.07;
 const MARGIN_X = 2.2;
 const MARGIN_Y = 1.8;
 const CANVAS_W = 1000;
-const CANVAS_H = 420;
-const PPM = CANVAS_W / (COURT_LENGTH + MARGIN_X * 2);
+const CANVAS_H = 620;
 
 const GRAVITY = 13.5;
 const BALL_RADIUS = 0.09;
@@ -27,8 +26,6 @@ const HIT_MAX_HEIGHT = 2.4;
 const PLAYER_BOUNDS = { xMin: -MARGIN_X + 0.3, xMax: NET_X - 0.35, yMin: -MARGIN_Y + 0.3, yMax: COURT_WIDTH + MARGIN_Y - 0.3 };
 const CPU_BOUNDS = { xMin: NET_X + 0.35, xMax: COURT_LENGTH + MARGIN_X - 0.3, yMin: -MARGIN_Y + 0.3, yMax: COURT_WIDTH + MARGIN_Y - 0.3 };
 
-function courtToPx(xm, ym) { return { x: (MARGIN_X + xm) * PPM, y: (MARGIN_Y + ym) * PPM }; }
-function pxToCourt(px, py) { return { x: px / PPM - MARGIN_X, y: py / PPM - MARGIN_Y }; }
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 function rand(lo, hi) { return lo + Math.random() * (hi - lo); }
 function dist2(ax, ay, bx, by) { const dx = ax - bx, dy = ay - by; return dx * dx + dy * dy; }
@@ -36,6 +33,49 @@ function dist2(ax, ay, bx, by) { const dx = ax - bx, dy = ay - by; return dx * d
 function netHeightAt(y) {
   const t = Math.min(1, Math.abs(y - MID_Y) / MID_Y);
   return NET_HEIGHT_CENTER + (NET_HEIGHT_POST - NET_HEIGHT_CENTER) * t;
+}
+
+/* =========================================================
+   CÂMERA — visão de frente, de pé atrás da linha de fundo do
+   jogador, olhando para o fundo adversário (perspectiva real,
+   não vista de cima/de lado).
+   ========================================================= */
+const WORLD_X_MIN = -MARGIN_X;
+const WORLD_X_MAX = COURT_LENGTH + MARGIN_X;
+const WORLD_Y_MIN = -MARGIN_Y;
+const WORLD_Y_MAX = COURT_WIDTH + MARGIN_Y;
+
+const CAM_X = -(MARGIN_X + 15.5);
+const CAM_Z = 8.4;
+const HORIZON_Y = 108;
+const GROUND_Y = CANVAS_H - 10;
+
+function depthOf(x) { return x - CAM_X; }
+function vOffsetOf(x, z) { return (CAM_Z - z) / depthOf(x); }
+const V_NEAR = vOffsetOf(WORLD_X_MIN, 0);
+const V_FAR = vOffsetOf(WORLD_X_MAX, 0);
+const D_NEAR = depthOf(WORLD_X_MIN);
+const HALF_WIDTH_WORLD = WORLD_Y_MAX - MID_Y;
+const FOCAL_X = (CANVAS_W / 2 * 0.95) * D_NEAR / HALF_WIDTH_WORLD;
+
+function project(x, y, z) {
+  const depth = depthOf(x);
+  const vOff = vOffsetOf(x, z);
+  const t = (vOff - V_FAR) / (V_NEAR - V_FAR);
+  const sy = HORIZON_Y + t * (GROUND_Y - HORIZON_Y);
+  const sx = CANVAS_W / 2 + (FOCAL_X * (y - MID_Y)) / depth;
+  return { x: sx, y: sy, scale: D_NEAR / depth, depth };
+}
+
+function courtToPx(xm, ym, zm) { const p = project(xm, ym, zm || 0); return { x: p.x, y: p.y }; }
+
+function pxToCourt(px, py) {
+  const t = (py - HORIZON_Y) / (GROUND_Y - HORIZON_Y);
+  const vOff = V_FAR + t * (V_NEAR - V_FAR);
+  const depth = CAM_Z / Math.max(vOff, 0.001);
+  const x = CAM_X + depth;
+  const y = MID_Y + ((px - CANVAS_W / 2) * depth) / FOCAL_X;
+  return { x, y };
 }
 
 /* =========================================================
@@ -71,15 +111,18 @@ const DIFFICULTIES = {
 const COURTS = {
   dura: {
     label: 'Dura (Azul)', lineColor: '#f5f8ff', netColor: '#0d1117', glow: false,
-    surface: ['#1f63b0', '#1857a0'], out: '#123a70', bounceMul: 1.0,
+    surface: ['#153f7a', '#2a72c4'], out: '#0c2450', bounceMul: 1.0,
+    sky: ['#0e1a33', '#2c4b78'],
   },
   cyber: {
     label: 'Cyber', lineColor: '#4dfaff', netColor: '#ff2fd1', glow: true,
-    surface: ['#170a33', '#0c0620'], out: '#08041a', bounceMul: 1.08,
+    surface: ['#0c0620', '#241049'], out: '#050110', bounceMul: 1.08,
+    sky: ['#05010f', '#20063f'],
   },
   grama: {
     label: 'Grama', lineColor: '#f5f8ff', netColor: '#3a2a1a', glow: false,
-    surface: ['#2f9142', '#237334'], out: '#194f23', bounceMul: 0.88,
+    surface: ['#1c5c26', '#3aa14a'], out: '#123a19', bounceMul: 0.88,
+    sky: ['#0d2a1c', '#2f6e4a'],
   },
 };
 
@@ -97,8 +140,8 @@ const state = {
   letServe: false,
   match: null,
   ball: null,
-  player: { x: 3, y: MID_Y, targetX: 3, targetY: MID_Y, vy: 0 },
-  cpu: { x: COURT_LENGTH - 3, y: MID_Y, reactTimer: 0, aimTarget: null },
+  player: { x: 3, y: MID_Y, targetX: 3, targetY: MID_Y, vy: 0, vx: 0, swingElapsed: 99 },
+  cpu: { x: COURT_LENGTH - 3, y: MID_Y, reactTimer: 0, aimTarget: null, swingElapsed: 99 },
   pointClockAfterHit: 0,
   lastHitter: null,
   effects: [],
@@ -249,15 +292,13 @@ function doServe() {
   const accuracy = diff.serveAccuracy * (state.serveNumber === 1 ? 1 : 1.25);
   const margin = (1 - Math.min(accuracy, 0.97)) * 1.8 + 0.25;
   const targetY = clamp(rand(half[0] + margin, half[1] - margin), half[0] + 0.15, half[1] - 0.15);
-  const targetX = clamp(rand(PLAYER_SERVICE_X + 0.3, NET_X - 0.3), PLAYER_SERVICE_X + 0.15, NET_X - 0.15);
+  // fica longe da fita da rede: mira na metade de trás da caixa de saque
+  const targetX = clamp(rand(PLAYER_SERVICE_X + 0.6, NET_X - 1.1), PLAYER_SERVICE_X + 0.3, NET_X - 0.6);
 
   const speedRange = state.serveNumber === 1 ? diff.serve1Speed : diff.serve2Speed;
   const speed = rand(speedRange[0], speedRange[1]);
-  const dx = targetX - state.ball.x, dy = targetY - state.ball.y;
-  const dist = Math.hypot(dx, dy);
-  const flightTime = Math.max(0.25, dist / speed);
 
-  launchBall(state.ball, targetX, targetY, 0, flightTime);
+  launchBallCleared(state.ball, targetX, targetY, 0, speed);
   state.ball.inPlay = true;
   state.ball.bounces = 0;
   state.ball.serveTarget = { x: targetX, y: targetY, half };
@@ -268,6 +309,31 @@ function launchBall(ball, tx, ty, tz, t) {
   ball.vx = (tx - ball.x) / t;
   ball.vy = (ty - ball.y) / t;
   ball.vz = (tz - ball.z) / t + 0.5 * GRAVITY * t;
+}
+
+/* Lança a bola mirando (tx,ty,tz) a uma velocidade média alvo, mas
+   ajusta o tempo de voo (arco) até garantir folga sobre a rede —
+   evita que o físico gere trajetórias baixas demais que tocam a fita. */
+function launchBallCleared(ball, tx, ty, tz, speed, clearance) {
+  clearance = clearance == null ? 0.28 : clearance;
+  let t = Math.max(0.22, Math.hypot(tx - ball.x, ty - ball.y) / speed);
+  for (let i = 0; i < 7; i++) {
+    const vx = (tx - ball.x) / t;
+    const vy = (ty - ball.y) / t;
+    const vz = (tz - ball.z) / t + 0.5 * GRAVITY * t;
+    if (vx === 0) { ball.vx = vx; ball.vy = vy; ball.vz = vz; return; }
+    const tNet = (NET_X - ball.x) / vx;
+    if (tNet <= 0 || tNet >= t) { ball.vx = vx; ball.vy = vy; ball.vz = vz; return; }
+    const yNet = ball.y + vy * tNet;
+    const zNet = ball.z + vz * tNet - 0.5 * GRAVITY * tNet * tNet;
+    if (zNet >= netHeightAt(clamp(yNet, 0, COURT_WIDTH)) + clearance) {
+      ball.vx = vx; ball.vy = vy; ball.vz = vz;
+      return;
+    }
+    t *= 1.14; // aumenta o tempo de voo -> arco mais alto, mais folga na rede
+  }
+  const vx = (tx - ball.x) / t, vy = (ty - ball.y) / t;
+  ball.vx = vx; ball.vy = vy; ball.vz = (tz - ball.z) / t + 0.5 * GRAVITY * t;
 }
 
 /* =========================================================
@@ -448,8 +514,9 @@ function handleBounce() {
   if (ball.isServe && ball.bounces === 1) {
     const t = ball.serveTarget;
     const inBox = ball.x >= PLAYER_SERVICE_X - 0.02 && ball.x <= NET_X + 0.02 && ball.y >= t.half[0] - 0.02 && ball.y <= t.half[1] + 0.02;
-    if (state.letServe) {
-      state.letServe = false;
+    const wasLet = state.letServe;
+    state.letServe = false;
+    if (wasLet && inBox) {
       ball.inPlay = false;
       showMessage('LET — repete o saque', 1000);
       setTimeout(() => { state.phase = 'serve-ready'; doServe(); }, 900);
@@ -498,13 +565,16 @@ function checkAce() {
 /* =========================================================
    RAQUETES
    ========================================================= */
+const SWING_DUR = 0.24;
+
 function updatePlayer(dt) {
   const p = state.player;
   const followSpeed = 22;
   const dx = p.targetX - p.x, dy = p.targetY - p.y;
-  p.vy = dy;
+  p.vx = dx; p.vy = dy;
   p.x += clamp(dx * followSpeed * dt, -30 * dt, 30 * dt);
   p.y += clamp(dy * followSpeed * dt, -30 * dt, 30 * dt);
+  if (p.swingElapsed < SWING_DUR) p.swingElapsed += dt;
 }
 
 function predictLanding(ball) {
@@ -549,6 +619,7 @@ function updateCPU(dt) {
   c.y += (dy / d) * Math.min(step, Math.abs(dy));
   c.x = clamp(c.x, CPU_BOUNDS.xMin, CPU_BOUNDS.xMax);
   c.y = clamp(c.y, CPU_BOUNDS.yMin, CPU_BOUNDS.yMax);
+  if (c.swingElapsed < SWING_DUR) c.swingElapsed += dt;
 }
 
 function tryHits() {
@@ -582,10 +653,9 @@ function playerHit() {
   let targetX = clamp(NET_X + rand(1.2, COURT_LENGTH - NET_X - 0.6), NET_X + 0.5, COURT_LENGTH - 0.5);
 
   const speed = clamp(11 + Math.hypot(p.targetX - p.x, p.targetY - p.y) * 6, 10, 22);
-  const dist = Math.hypot(targetX - ball.x, targetY - ball.y);
-  const flightTime = Math.max(0.28, dist / speed);
-  launchBall(ball, targetX, targetY, 0, flightTime);
+  launchBallCleared(ball, targetX, targetY, 0, speed);
   spawnHitFlash(ball.x, ball.y);
+  p.swingElapsed = 0;
 }
 
 function cpuHit() {
@@ -609,10 +679,9 @@ function cpuHit() {
   }
 
   const speed = clamp(10 + diff.cpuSpeed * 1.6, 10, 24);
-  const dist = Math.hypot(targetX - ball.x, targetY - ball.y);
-  const flightTime = Math.max(0.28, dist / speed);
-  launchBall(ball, targetX, targetY, 0, flightTime);
+  launchBallCleared(ball, targetX, targetY, 0, speed);
   spawnHitFlash(ball.x, ball.y);
+  c.swingElapsed = 0;
 }
 
 /* =========================================================
@@ -628,25 +697,44 @@ function updateEffects(dt) {
 }
 
 /* =========================================================
-   RENDERIZAÇÃO
+   RENDERIZAÇÃO — câmera de frente, atrás da linha de fundo do
+   jogador, olhando para o fundo do adversário.
    ========================================================= */
+function drawSky() {
+  const c = COURTS[state.court];
+  const sky = ctx.createLinearGradient(0, 0, 0, HORIZON_Y + 30);
+  sky.addColorStop(0, c.sky[0]);
+  sky.addColorStop(1, c.sky[1]);
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, CANVAS_W, HORIZON_Y + 30);
+}
+
 function drawCourt() {
   const c = COURTS[state.court];
   ctx.fillStyle = c.out;
   ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+  drawSky();
 
-  const tl = courtToPx(0, 0);
-  const br = courtToPx(COURT_LENGTH, COURT_WIDTH);
-  const grad = ctx.createLinearGradient(0, tl.y, 0, br.y);
+  // área jogável (com faixa de saída) como polígono em perspectiva
+  const corners = [
+    courtToPx(WORLD_X_MIN, WORLD_Y_MIN), courtToPx(WORLD_X_MAX, WORLD_Y_MIN),
+    courtToPx(WORLD_X_MAX, WORLD_Y_MAX), courtToPx(WORLD_X_MIN, WORLD_Y_MAX),
+  ];
+  ctx.beginPath();
+  ctx.moveTo(corners[0].x, corners[0].y);
+  for (let i = 1; i < 4; i++) ctx.lineTo(corners[i].x, corners[i].y);
+  ctx.closePath();
+  const grad = ctx.createLinearGradient(0, HORIZON_Y, 0, GROUND_Y);
   grad.addColorStop(0, c.surface[0]);
   grad.addColorStop(1, c.surface[1]);
   ctx.fillStyle = grad;
-  ctx.fillRect(tl.x, tl.y, br.x - tl.x, br.y - tl.y);
+  ctx.fill();
 
   ctx.save();
   ctx.strokeStyle = c.lineColor;
-  ctx.lineWidth = 2.4;
-  if (c.glow) { ctx.shadowColor = c.lineColor; ctx.shadowBlur = 8; }
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  if (c.glow) { ctx.shadowColor = c.lineColor; ctx.shadowBlur = 10; }
 
   line(0, 0, 0, COURT_WIDTH);
   line(COURT_LENGTH, 0, COURT_LENGTH, COURT_WIDTH);
@@ -655,26 +743,11 @@ function drawCourt() {
   line(PLAYER_SERVICE_X, 0, PLAYER_SERVICE_X, COURT_WIDTH);
   line(CPU_SERVICE_X, 0, CPU_SERVICE_X, COURT_WIDTH);
   line(PLAYER_SERVICE_X, MID_Y, CPU_SERVICE_X, MID_Y);
-  line(0, MID_Y, 0.15, MID_Y);
-  line(COURT_LENGTH - 0.15, MID_Y, COURT_LENGTH, MID_Y);
+  line(0, MID_Y, 0.18, MID_Y);
+  line(COURT_LENGTH - 0.18, MID_Y, COURT_LENGTH, MID_Y);
   ctx.restore();
 
-  const n1 = courtToPx(NET_X, -0.15);
-  const n2 = courtToPx(NET_X, COURT_WIDTH + 0.15);
-  ctx.save();
-  ctx.strokeStyle = c.netColor;
-  ctx.lineWidth = 5;
-  if (c.glow) { ctx.shadowColor = c.netColor; ctx.shadowBlur = 10; }
-  ctx.beginPath(); ctx.moveTo(n1.x, n1.y); ctx.lineTo(n2.x, n2.y); ctx.stroke();
-  ctx.setLineDash([3, 4]);
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = 'rgba(255,255,255,.35)';
-  for (let i = 0; i <= 10; i++) {
-    const y0 = n1.y + (n2.y - n1.y) * (i / 10);
-    ctx.beginPath(); ctx.moveTo(n1.x - 3, y0); ctx.lineTo(n1.x + 3, y0); ctx.stroke();
-  }
-  ctx.setLineDash([]);
-  ctx.restore();
+  drawNet(c);
 
   function line(x1, y1, x2, y2) {
     const a = courtToPx(x1, y1), b = courtToPx(x2, y2);
@@ -682,45 +755,155 @@ function drawCourt() {
   }
 }
 
-function drawRacket(xm, ym, color, facingRight) {
-  const p = courtToPx(xm, ym);
+function drawNet(c) {
+  const yLo = -0.06, yHi = COURT_WIDTH + 0.06;
+  const cols = 26;
   ctx.save();
-  ctx.translate(p.x, p.y);
+  if (c.glow) { ctx.shadowColor = c.netColor; ctx.shadowBlur = 8; }
+
+  // sombra do fio no chão
+  const b0 = courtToPx(NET_X, yLo, 0), b1 = courtToPx(NET_X, yHi, 0);
+  ctx.strokeStyle = 'rgba(0,0,0,.25)';
+  ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(b0.x, b0.y); ctx.lineTo(b1.x, b1.y); ctx.stroke();
+
+  // malha vertical
+  ctx.strokeStyle = c.glow ? c.netColor : 'rgba(255,255,255,.55)';
+  ctx.lineWidth = 1;
+  const tops = [];
+  for (let i = 0; i <= cols; i++) {
+    const y = yLo + (yHi - yLo) * (i / cols);
+    const h = i === 0 || i === cols ? NET_HEIGHT_POST + 0.06 : netHeightAt(clamp(y, 0, COURT_WIDTH));
+    const bottom = courtToPx(NET_X, y, 0);
+    const top = courtToPx(NET_X, y, h);
+    tops.push(top);
+    ctx.beginPath(); ctx.moveTo(bottom.x, bottom.y); ctx.lineTo(top.x, top.y); ctx.stroke();
+  }
+  // fio superior
+  ctx.strokeStyle = c.lineColor;
+  ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.ellipse(0, 6, 13, 5, 0, 0, Math.PI * 2);
+  ctx.moveTo(tops[0].x, tops[0].y);
+  for (let i = 1; i < tops.length; i++) ctx.lineTo(tops[i].x, tops[i].y);
+  ctx.stroke();
+
+  // postes
+  ctx.fillStyle = '#20242e';
+  [yLo, yHi].forEach((y) => {
+    const bottom = courtToPx(NET_X, y, 0);
+    const top = courtToPx(NET_X, y, NET_HEIGHT_POST + 0.08);
+    ctx.fillRect(bottom.x - 2.5, top.y, 5, bottom.y - top.y);
+  });
+  ctx.restore();
+}
+
+/* Raquete com cabo, aro oval e cordas cruzadas — desenhada a partir
+   da posição do jogador no chão, "erguida" até a altura da mão, com
+   leve inclinação de preparo e uma animação de swing na tacada. */
+function drawPlayerFigure(xm, ym, color, isPlayer, swingElapsed) {
+  const ground = project(xm, ym, 0);
+  const handHeight = 1.05;
+  const hand = project(xm, ym, handHeight);
+  const scale = ground.scale;
+
+  // sombra
+  ctx.beginPath();
+  ctx.ellipse(ground.x, ground.y, 15 * scale, 5.5 * scale, 0, 0, Math.PI * 2);
   ctx.fillStyle = 'rgba(0,0,0,.35)';
   ctx.fill();
 
-  const handleDir = facingRight ? -1 : 1;
-  ctx.strokeStyle = '#2a2f38';
-  ctx.lineWidth = 4;
-  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(handleDir * 16, 0); ctx.stroke();
-
+  // corpo (torso simplificado)
+  ctx.save();
+  ctx.translate(ground.x, ground.y);
+  ctx.scale(scale, scale);
   ctx.beginPath();
-  ctx.ellipse(handleDir * -8, 0, 12, 15, 0, 0, Math.PI * 2);
-  ctx.fillStyle = color;
-  ctx.globalAlpha = 0.85;
+  ctx.ellipse(0, -38, 12, 20, 0, 0, Math.PI * 2);
+  const bodyGrad = ctx.createLinearGradient(0, -58, 0, -18);
+  bodyGrad.addColorStop(0, shade(color, 18));
+  bodyGrad.addColorStop(1, shade(color, -22));
+  ctx.fillStyle = bodyGrad;
   ctx.fill();
-  ctx.lineWidth = 2.5;
-  ctx.strokeStyle = '#fff';
-  ctx.globalAlpha = 1;
-  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(0, -66, 8, 0, Math.PI * 2);
+  ctx.fillStyle = '#f0c8a0';
+  ctx.fill();
   ctx.restore();
+
+  // progresso do swing (0 = parado, 1 = tacada completa)
+  const swinging = swingElapsed < SWING_DUR;
+  const prog = swinging ? swingElapsed / SWING_DUR : 0;
+  const swingAngle = Math.sin(clamp(prog, 0, 1) * Math.PI) * 1.55;
+  const readyLean = clamp((isPlayer ? state.player.vy : (ym - state.cpu.y)) * 0.35, -0.3, 0.3);
+  const facing = isPlayer ? 1 : -1;
+  const angle = facing * (0.35 + swingAngle - readyLean);
+
+  ctx.save();
+  ctx.translate(hand.x, hand.y);
+  ctx.scale(scale, scale);
+  ctx.rotate(angle);
+
+  // cabo
+  const grip = 28;
+  ctx.fillStyle = '#2a2f38';
+  ctx.fillRect(-3, 0, 6, grip);
+  ctx.strokeStyle = '#565f6e';
+  ctx.lineWidth = 1;
+  for (let i = 4; i < grip; i += 5) { ctx.beginPath(); ctx.moveTo(-3, i); ctx.lineTo(3, i); ctx.stroke(); }
+
+  // haste até o aro
+  ctx.strokeStyle = '#3a3f4a';
+  ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -14); ctx.stroke();
+
+  // aro oval
+  const headCx = 0, headCy = -40, headRx = 15, headRy = 21;
+  ctx.beginPath();
+  ctx.ellipse(headCx, headCy, headRx, headRy, 0, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,.14)';
+  ctx.fill();
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = color;
+  ctx.stroke();
+
+  // cordas cruzadas
+  ctx.save();
+  ctx.beginPath();
+  ctx.ellipse(headCx, headCy, headRx - 2.5, headRy - 2.5, 0, 0, Math.PI * 2);
+  ctx.clip();
+  ctx.strokeStyle = 'rgba(255,255,255,.75)';
+  ctx.lineWidth = 0.8;
+  for (let i = -3; i <= 3; i++) {
+    ctx.beginPath(); ctx.moveTo(headCx + i * 4.3, headCy - headRy); ctx.lineTo(headCx + i * 4.3, headCy + headRy); ctx.stroke();
+  }
+  for (let i = -4; i <= 4; i++) {
+    ctx.beginPath(); ctx.moveTo(headCx - headRx, headCy + i * 4.3); ctx.lineTo(headCx + headRx, headCy + i * 4.3); ctx.stroke();
+  }
+  ctx.restore();
+
+  ctx.restore();
+}
+
+function shade(hex, amt) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = clamp(((n >> 16) & 255) + amt, 0, 255);
+  const g = clamp(((n >> 8) & 255) + amt, 0, 255);
+  const b = clamp((n & 255) + amt, 0, 255);
+  return `rgb(${r},${g},${b})`;
 }
 
 function drawBall() {
   const ball = state.ball;
   if (!ball) return;
-  const shadowP = courtToPx(ball.x, ball.y);
-  const shadowScale = clamp(1 - ball.z / 6, 0.25, 1);
+  const ground = project(ball.x, ball.y, 0);
+  const shadowScale = clamp(1 - ball.z / 6, 0.2, 1) * ground.scale;
   ctx.beginPath();
-  ctx.ellipse(shadowP.x, shadowP.y, 9 * shadowScale, 4 * shadowScale, 0, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(0,0,0,.4)';
+  ctx.ellipse(ground.x, ground.y, 9 * shadowScale, 3.5 * shadowScale, 0, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(0,0,0,.38)';
   ctx.fill();
 
-  const ballPx = shadowP.y - ball.z * PPM * 0.9;
+  const air = project(ball.x, ball.y, ball.z);
   ctx.beginPath();
-  ctx.arc(shadowP.x, ballPx, 7, 0, Math.PI * 2);
+  ctx.arc(air.x, air.y, 6.5 * air.scale, 0, Math.PI * 2);
   ctx.fillStyle = '#d8ff3e';
   ctx.fill();
   ctx.lineWidth = 1;
@@ -731,15 +914,16 @@ function drawBall() {
 function drawEffects() {
   for (const e of state.effects) {
     const p = courtToPx(e.x, e.y);
+    const s = project(e.x, e.y, 0).scale;
     const t = e.life / e.max;
     ctx.beginPath();
     if (e.type === 'bounce') {
-      ctx.ellipse(p.x, p.y, 14 * (1.4 - t), 5 * (1.4 - t), 0, 0, Math.PI * 2);
+      ctx.ellipse(p.x, p.y, 14 * (1.4 - t) * s, 4.5 * (1.4 - t) * s, 0, 0, Math.PI * 2);
       ctx.strokeStyle = `rgba(255,255,255,${t * 0.6})`;
       ctx.lineWidth = 2;
       ctx.stroke();
     } else {
-      ctx.arc(p.x, p.y, 16 * (1 - t) + 4, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, (16 * (1 - t) + 4) * s, 0, Math.PI * 2);
       ctx.strokeStyle = `rgba(255,255,255,${t * 0.5})`;
       ctx.lineWidth = 2;
       ctx.stroke();
@@ -750,9 +934,15 @@ function drawEffects() {
 function render() {
   drawCourt();
   drawEffects();
-  drawRacket(state.player.x, state.player.y, '#3ee68f', true);
-  drawRacket(state.cpu.x, state.cpu.y, '#ff5d73', false);
-  drawBall();
+
+  // ordena por profundidade: desenha o que está mais longe primeiro
+  const items = [
+    { depth: depthOf(state.cpu.x), draw: () => drawPlayerFigure(state.cpu.x, state.cpu.y, '#ff5d73', false, state.cpu.swingElapsed) },
+    { depth: depthOf(state.ball ? state.ball.x : NET_X), draw: drawBall },
+    { depth: depthOf(state.player.x), draw: () => drawPlayerFigure(state.player.x, state.player.y, '#3ee68f', true, state.player.swingElapsed) },
+  ];
+  items.sort((a, b) => b.depth - a.depth);
+  items.forEach((it) => it.draw());
 }
 
 /* =========================================================
