@@ -34,6 +34,7 @@
 
 html {
   scroll-behavior: smooth;
+  cursor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiNmM2YyZWYiIHN0cm9rZS13aWR0aD0iMS4xIiBzdHJva2UtbGluZWNhcD0icm91bmQiPgogICAgPGxpbmUgeDE9IjE2IiB5MT0iMSIgeDI9IjE2IiB5Mj0iMzEiLz4KICAgIDxsaW5lIHgxPSIxIiB5MT0iMTYiIHgyPSIzMSIgeTI9IjE2Ii8+CiAgICA8bGluZSB4MT0iNS41IiB5MT0iNS41IiB4Mj0iMjYuNSIgeTI9IjI2LjUiLz4KICAgIDxsaW5lIHgxPSIyNi41IiB5MT0iNS41IiB4Mj0iNS41IiB5Mj0iMjYuNSIvPgogICAgPHBhdGggZD0iTTE2IDYuNSBMMjEgOC41IEwyNCAxNiBMMjEgMjMuNSBMMTYgMjUuNSBMMTEgMjMuNSBMOCAxNiBMMTEgOC41IFoiIHN0cm9rZS13aWR0aD0iMC45Ii8+CiAgICA8cGF0aCBkPSJNMTYgMTEuNSBMMTkgMTMgTDIwLjUgMTYgTDE5IDE5IEwxNiAyMC41IEwxMyAxOSBMMTEuNSAxNiBMMTMgMTMgWiIgc3Ryb2tlLXdpZHRoPSIwLjkiLz4KICA8L2c+CiAgPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMS42IiBmaWxsPSIjZTAxMDJmIi8+Cjwvc3ZnPgo=') 16 16, auto;
 }
 
 body {
@@ -54,11 +55,12 @@ img {
 a {
   color: inherit;
   text-decoration: none;
+  cursor: inherit;
 }
 
 button {
   font: inherit;
-  cursor: pointer;
+  cursor: inherit;
 }
 
 /* ---------- Cover / intro ---------- */

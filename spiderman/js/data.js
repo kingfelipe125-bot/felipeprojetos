@@ -37,7 +37,15 @@ const FILMES = [
         nota: "Equipamento com pernas mecânicas retráteis, projetado por Tony Stark. Também utilizado em Vingadores: Ultimato (2019).",
       },
     ],
-    viloes: [],
+    viloes: [
+      {
+        nome: "Thanos",
+        identidade: "Thanos",
+        ator: "Josh Brolin",
+        imagem: "assets/viloes/thanos.png",
+        nota: "O Titã Louco parte em busca das seis Joias do Infinito para eliminar metade de toda a vida no universo com um estalar de dedos.",
+      },
+    ],
   },
   {
     id: "ultimato",
@@ -53,7 +61,15 @@ const FILMES = [
         nota: "Mesmo equipamento apresentado em Vingadores: Guerra Infinita (2018), usado novamente na batalha final contra Thanos.",
       },
     ],
-    viloes: [],
+    viloes: [
+      {
+        nome: "Thanos",
+        identidade: "Thanos",
+        ator: "Josh Brolin",
+        imagem: "assets/viloes/thanos.png",
+        nota: "Já instalado em sua fazenda após o estalar de dedos, é confrontado por uma versão passada de si mesmo trazida ao presente pelos Vingadores.",
+      },
+    ],
   },
   {
     id: "longe-de-casa",
