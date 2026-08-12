@@ -580,6 +580,140 @@ body.locked {
   }
 }
 
+/* ---------- Cronologia ---------- */
+
+.cronologia {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 100px 28px 110px;
+  border-top: 1px solid var(--border);
+}
+
+.cronologia-head {
+  max-width: 62ch;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.cronologia-kicker {
+  display: block;
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 16px;
+}
+
+.cronologia-head h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(28px, 4vw, 42px);
+  letter-spacing: 0.02em;
+  margin: 0 0 14px;
+}
+
+.cronologia-head p {
+  color: var(--text-muted);
+  font-size: 15px;
+  margin: 0 auto;
+}
+
+.cronologia-frame {
+  display: block;
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg-card);
+  transition: border-color 0.25s ease;
+}
+
+.cronologia-frame:hover {
+  border-color: var(--border-strong);
+}
+
+.cronologia-frame img {
+  width: 100%;
+  display: block;
+}
+
+.cronologia-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  font-family: var(--font-label);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: rgba(9, 9, 11, 0.72);
+  border: 1px solid var(--border-strong);
+  padding: 7px 14px;
+  backdrop-filter: blur(6px);
+  white-space: nowrap;
+}
+
+/* ---------- Lightbox ---------- */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(5, 5, 6, 0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+  overflow: auto;
+}
+
+.lightbox.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox img {
+  max-width: 94vw;
+  max-height: 92vh;
+  width: auto;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  margin: auto;
+}
+
+.lightbox-close {
+  position: fixed;
+  top: 18px;
+  right: 22px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  background: rgba(9, 9, 11, 0.8);
+  color: var(--text);
+  font-size: 22px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .cronologia {
+    padding: 72px 20px 80px;
+  }
+}
+
 /* ---------- Outro ---------- */
 
 .outro {
