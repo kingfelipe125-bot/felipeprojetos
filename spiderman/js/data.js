@@ -4,6 +4,7 @@ const FILMES = [
     titulo: "Homem-Aranha: De Volta ao Lar",
     ano: 2017,
     poster: "assets/capas/de-volta-ao-lar.jpg",
+    trailer: "Q0CbN8sfihY",
     nota: "Primeira aparição de Peter Parker como protagonista no Universo Cinematográfico Marvel, sob a orientação de Tony Stark.",
     resumo: "Depois de ajudar os Vingadores em Berlim, Peter Parker volta à rotina de estudante no Queens, ansioso para provar que está pronto para mais responsabilidades. Ele acaba investigando por conta própria um esquema de armas alienígenas comandado pelo Abutre, o que o coloca em rota de colisão com Tony Stark.",
     trajes: [
@@ -33,6 +34,7 @@ const FILMES = [
     titulo: "Vingadores: Guerra Infinita",
     ano: 2018,
     poster: "assets/capas/guerra-infinita.jpg",
+    trailer: "6ZfuNTqbHE8",
     nota: "Peter Parker se junta aos Vingadores no confronto contra Thanos, recebendo um novo equipamento de combate.",
     resumo: "Thanos parte em busca das seis Joias do Infinito para eliminar metade da vida no universo. Peter Parker é levado por Tony Stark para a batalha em Titã, unindo forças com os Guardiões da Galáxia contra o titã louco.",
     trajes: [
@@ -57,6 +59,7 @@ const FILMES = [
     titulo: "Vingadores: Ultimato",
     ano: 2019,
     poster: "assets/capas/ultimato.webp",
+    trailer: "TcMBFSGVi1c",
     nota: "Desfecho da saga do Infinito, com o retorno de Peter Parker à batalha final contra Thanos, ainda com o Traje Aranha de Ferro apresentado em Guerra Infinita.",
     resumo: "Cinco anos após o estalar de dedos de Thanos, os Vingadores sobreviventes traçam um plano para reverter a devastação. Peter Parker retorna à ativa para a batalha final que decide o destino do universo.",
     trajes: [
@@ -81,6 +84,7 @@ const FILMES = [
     titulo: "Homem-Aranha: Longe de Casa",
     ano: 2019,
     poster: "assets/capas/longe-de-casa.jpg",
+    trailer: "Nt9L1jCKGnE",
     nota: "Peter Parker enfrenta Mysterio durante uma viagem escolar pela Europa, tentando equilibrar a vida de herói e estudante.",
     resumo: "Peter Parker viaja para a Europa com os colegas de escola, torcendo por um tempo longe da vida de herói. Nick Fury tem outros planos e o recruta para enfrentar seres elementais ao lado de um misterioso aliado, Quentin Beck.",
     trajes: [
@@ -115,6 +119,7 @@ const FILMES = [
     titulo: "Homem-Aranha: Sem Volta Pra Casa",
     ano: 2021,
     poster: "assets/capas/sem-volta-pra-casa.jpg",
+    trailer: "JfVOs4VSpmA",
     nota: "Um feitiço malsucedido rompe o multiverso, trazendo vilões de outras realidades para enfrentar Peter Parker.",
     resumo: "Com sua identidade secreta revelada, Peter Parker pede ajuda a Doutor Estranho para que o mundo esqueça que ele é o Homem-Aranha. O feitiço dá errado e abre portas para vilões de outras realidades que conhecem o Homem-Aranha, mas não o Peter Parker deste universo.",
     trajes: [

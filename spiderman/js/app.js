@@ -101,6 +101,12 @@
               '<p class="chapter-year">' + filme.ano + "</p>" +
               '<h2 class="chapter-title">' + filme.titulo + "</h2>" +
               '<p class="chapter-note">' + filme.nota + "</p>" +
+              (filme.trailer
+                ? '<button type="button" class="trailer-btn" data-trailer="' + filme.trailer + '">' +
+                    '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>' +
+                    "Assistir trailer" +
+                  "</button>"
+                : "") +
             "</div>" +
           "</div>" +
           subBlocks +
@@ -337,6 +343,71 @@
     });
   }
 
+  function setupTrailerModal() {
+    const panel = document.getElementById("trailer-modal");
+    const handle = document.getElementById("trailer-panel-handle");
+    const closeBtn = document.getElementById("trailer-modal-close");
+    const iframe = document.getElementById("trailer-modal-iframe");
+    if (!panel || !handle || !closeBtn || !iframe) return;
+
+    function close() {
+      panel.classList.remove("open");
+      panel.setAttribute("aria-hidden", "true");
+      iframe.setAttribute("src", "");
+    }
+
+    function open(videoId) {
+      if (!videoId) return;
+      iframe.setAttribute(
+        "src",
+        "https://www.youtube-nocookie.com/embed/" + videoId + "?autoplay=1&rel=0"
+      );
+      panel.style.top = panel.style.top || "96px";
+      panel.classList.add("open");
+      panel.removeAttribute("aria-hidden");
+    }
+
+    document.addEventListener("click", function (e) {
+      const btn = e.target.closest(".trailer-btn");
+      if (!btn) return;
+      open(btn.getAttribute("data-trailer"));
+    });
+
+    closeBtn.addEventListener("click", close);
+    window.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") close();
+    });
+
+    let dragging = false;
+    let startY = 0;
+    let startTop = 0;
+
+    handle.addEventListener("pointerdown", function (e) {
+      if (e.target === closeBtn || closeBtn.contains(e.target)) return;
+      dragging = true;
+      startY = e.clientY;
+      startTop = panel.getBoundingClientRect().top;
+      handle.classList.add("dragging");
+    });
+
+    window.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      const dy = e.clientY - startY;
+      const maxTop = window.innerHeight - panel.offsetHeight - 10;
+      const newTop = Math.max(10, Math.min(maxTop, startTop + dy));
+      panel.style.top = newTop + "px";
+    });
+
+    function endDrag() {
+      if (!dragging) return;
+      dragging = false;
+      handle.classList.remove("dragging");
+    }
+
+    window.addEventListener("pointerup", endDrag);
+    window.addEventListener("pointercancel", endDrag);
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     renderTimeline();
     setupScrollReveal();
@@ -345,6 +416,7 @@
     setupLightbox();
     const trajeModal = setupTrajeModal();
     setupGaleria(trajeModal);
+    setupTrailerModal();
     playCover();
 
     if (window.location.hash) {

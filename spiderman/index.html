@@ -6,7 +6,7 @@
   <title>Homem-Aranha: Arquivo Oficial</title>
   <meta name="description" content="Registro oficial dos filmes, trajes e vilões da trilogia do Homem-Aranha no Universo Cinematográfico Marvel, em ordem cronológica.">
   <link rel="icon" href="assets/logo/emblema.png">
-  <link rel="stylesheet" href="css/styles.css?v=5">
+  <link rel="stylesheet" href="css/styles.css?v=6">
   <script>
     if ("scrollRestoration" in history) {
       history.scrollRestoration = "manual";
@@ -120,7 +120,23 @@
     </div>
   </div>
 
-  <script src="js/data.js?v=5"></script>
-  <script src="js/app.js?v=5"></script>
+  <div id="trailer-modal" class="trailer-panel" aria-hidden="true">
+    <div class="trailer-panel-handle" id="trailer-panel-handle">
+      <span class="trailer-panel-title">Trailer</span>
+      <button type="button" class="trailer-modal-close" id="trailer-modal-close" aria-label="Fechar trailer">&times;</button>
+    </div>
+    <div class="trailer-modal-frame">
+      <iframe
+        id="trailer-modal-iframe"
+        src=""
+        title="Trailer"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </div>
+
+  <script src="js/data.js?v=6"></script>
+  <script src="js/app.js?v=6"></script>
 </body>
 </html>
