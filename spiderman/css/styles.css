@@ -951,6 +951,101 @@ body.locked {
   }
 }
 
+/* ---------- Spidey Tracker ---------- */
+
+.tracker {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 100px 28px 110px;
+  border-top: 1px solid var(--border);
+}
+
+.tracker-head {
+  max-width: 62ch;
+  margin: 0 auto 32px;
+  text-align: center;
+}
+
+.tracker-kicker {
+  display: block;
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 16px;
+}
+
+.tracker-head h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(28px, 4vw, 42px);
+  letter-spacing: 0.02em;
+  margin: 0 0 14px;
+}
+
+.tracker-head p {
+  color: var(--text-muted);
+  font-size: 15px;
+  margin: 0 auto 22px;
+}
+
+.tracker-external {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-label);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 11px 20px;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.tracker-external:hover {
+  border-color: var(--red);
+  background: var(--red-soft);
+}
+
+.tracker-frame {
+  position: relative;
+  width: 100%;
+  height: min(80vh, 760px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg-card);
+}
+
+.tracker-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.tracker-fallback {
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+@media (max-width: 640px) {
+  .tracker {
+    padding: 76px 20px 80px;
+  }
+
+  .tracker-frame {
+    height: 72vh;
+  }
+}
+
 /* ---------- Outro ---------- */
 
 .outro {
