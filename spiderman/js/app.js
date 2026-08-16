@@ -350,14 +350,21 @@
     const iframe = document.getElementById("trailer-modal-iframe");
     if (!panel || !handle || !closeBtn || !iframe) return;
 
+    let closeTimer = null;
+
     function close() {
+      if (!panel.classList.contains("open")) return;
       panel.classList.remove("open");
       panel.setAttribute("aria-hidden", "true");
-      iframe.setAttribute("src", "");
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(function () {
+        iframe.setAttribute("src", "");
+      }, 450);
     }
 
     function open(videoId) {
       if (!videoId) return;
+      clearTimeout(closeTimer);
       iframe.setAttribute(
         "src",
         "https://www.youtube-nocookie.com/embed/" + videoId + "?autoplay=1&rel=0"

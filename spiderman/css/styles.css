@@ -24,7 +24,7 @@
   --sky-soft: rgba(143, 199, 232, 0.14);
   --orange: #f2a93b;
 
-  --font-display: "Bitcount Prop Single", "Space Grotesk", "Segoe UI", sans-serif;
+  --font-display: "Press Start 2P", "Space Grotesk", "Segoe UI", sans-serif;
   --font-body: "Inter", -apple-system, "Segoe UI", sans-serif;
   --font-label: "VT323", "Space Grotesk", monospace;
 
@@ -37,8 +37,6 @@
 }
 
 .chapter-banner-tag,
-.mini-tag,
-.galeria-hint,
 .traje-modal-tag,
 .trailer-btn,
 .cronologia-hint,
@@ -137,8 +135,9 @@ button {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(38px, 7vw, 64px);
-  letter-spacing: 0.04em;
+  font-size: clamp(22px, 6vw, 42px);
+  letter-spacing: 0;
+  line-height: 1.4;
   text-shadow: 0 3px 0 rgba(0, 0, 0, 0.35);
   opacity: 0;
   animation: cover-fade 0.8s ease forwards 1.1s;
@@ -239,8 +238,9 @@ body.locked {
 .brand-text {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 22px;
-  letter-spacing: 0.03em;
+  font-size: 13px;
+  letter-spacing: 0;
+  line-height: 1.4;
 }
 
 .brand-text em {
@@ -392,7 +392,7 @@ body.locked {
   top: -18px;
   right: 0;
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 400;
   font-size: clamp(90px, 11vw, 170px);
   line-height: 1;
   color: var(--text);
@@ -422,12 +422,12 @@ body.locked {
 .chapter-title {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(32px, 4.4vw, 50px);
-  line-height: 1.2;
-  letter-spacing: 0.03em;
+  font-size: clamp(16px, 2.6vw, 26px);
+  line-height: 1.6;
+  letter-spacing: 0;
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
   margin: 0 0 18px;
-  max-width: 20ch;
+  max-width: 16ch;
 }
 
 .chapter-note {
@@ -485,7 +485,7 @@ body.locked {
   align-items: center;
   justify-content: center;
   padding: 22px;
-  background: radial-gradient(120% 100% at 50% 15%, var(--bg-raised), var(--bg-card) 70%);
+  background: var(--bg-raised);
   border-bottom: 1px solid var(--border);
 }
 
@@ -519,10 +519,10 @@ body.locked {
 .mini-body h4 {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 25px;
-  letter-spacing: 0.03em;
-  margin: 0 0 8px;
-  line-height: 1.2;
+  font-size: 14px;
+  letter-spacing: 0;
+  margin: 0 0 10px;
+  line-height: 1.6;
 }
 
 .mini-sub {
@@ -604,8 +604,9 @@ body.locked {
 .galeria-head h2 {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(28px, 4vw, 42px);
-  letter-spacing: 0.02em;
+  font-size: clamp(16px, 2.6vw, 24px);
+  letter-spacing: 0;
+  line-height: 1.6;
   margin: 0 0 14px;
 }
 
@@ -667,7 +668,7 @@ body.locked {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: radial-gradient(120% 100% at 50% 15%, var(--bg-raised), var(--bg-card) 70%);
+  background: var(--bg-raised);
   border-bottom: 1px solid var(--border);
 }
 
@@ -688,9 +689,10 @@ body.locked {
 .galeria-body h4 {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 20px;
-  letter-spacing: 0.02em;
-  margin: 0 0 8px;
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: 1.6;
+  margin: 0 0 10px;
 }
 
 .galeria-hint {
@@ -756,7 +758,7 @@ body.locked {
 }
 
 .traje-modal-media {
-  background: radial-gradient(120% 100% at 50% 15%, var(--bg-raised), var(--bg-card) 70%);
+  background: var(--bg-raised);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -790,9 +792,10 @@ body.locked {
 .traje-modal-body h3 {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 28px;
-  letter-spacing: 0.02em;
-  margin: 0 0 8px;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 1.6;
+  margin: 0 0 10px;
 }
 
 .traje-modal-meta {
@@ -982,8 +985,9 @@ body.locked {
 .cronologia-head h2 {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(28px, 4vw, 42px);
-  letter-spacing: 0.02em;
+  font-size: clamp(16px, 2.6vw, 24px);
+  letter-spacing: 0;
+  line-height: 1.6;
   margin: 0 0 14px;
 }
 
@@ -1116,8 +1120,9 @@ body.locked {
 .tracker-head h2 {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(28px, 4vw, 42px);
-  letter-spacing: 0.02em;
+  font-size: clamp(16px, 2.6vw, 24px);
+  letter-spacing: 0;
+  line-height: 1.6;
   margin: 0 0 14px;
 }
 
@@ -1160,8 +1165,9 @@ body.locked {
 .tracker-card-title {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 26px;
-  letter-spacing: 0.02em;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 1.6;
   margin: 10px 0 4px;
 }
 
