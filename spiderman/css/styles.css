@@ -9,7 +9,6 @@
 
 :root {
   --bg: #12111b;
-  --bg-alt: #171625;
   --bg-raised: #1c1b2c;
   --bg-card: #1a1927;
   --border: rgba(143, 199, 232, 0.22);
@@ -281,10 +280,6 @@ body.locked {
   border-bottom: 1px solid var(--border);
 }
 
-.chapter:nth-child(even) {
-  background: var(--bg-alt);
-}
-
 /* Banner: full poster, never cropped */
 
 .chapter-banner {
@@ -340,10 +335,6 @@ body.locked {
   z-index: 1;
   background: linear-gradient(to bottom, rgba(9, 9, 11, 0) 55%, rgba(9, 9, 11, 0.9) 92%, var(--bg) 100%);
   pointer-events: none;
-}
-
-.chapter:nth-child(even) .chapter-banner-fade {
-  background: linear-gradient(to bottom, rgba(16, 16, 19, 0) 55%, rgba(16, 16, 19, 0.9) 92%, var(--bg-alt) 100%);
 }
 
 .chapter-banner-tag {
