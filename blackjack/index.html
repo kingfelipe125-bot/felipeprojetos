@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blackjack 21</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="table">
+    <header class="topbar">
+      <h1>Blackjack <span>21</span></h1>
+      <div class="balance-box">
+        <span class="label">Moedas</span>
+        <span class="balance" id="balance">100</span>
+      </div>
+      <button id="reset-btn" class="btn btn-ghost" title="Reinicia o saldo para 100 moedas">Reiniciar</button>
+    </header>
+
+    <main class="board">
+      <section class="hand-area">
+        <div class="hand-header">
+          <span>Dealer</span>
+          <span class="score" id="dealer-score">0</span>
+        </div>
+        <div class="cards" id="dealer-cards"></div>
+      </section>
+
+      <div class="message" id="message">Faça sua aposta para começar</div>
+
+      <section class="hand-area">
+        <div class="hand-header">
+          <span>Você</span>
+          <span class="score" id="player-score">0</span>
+        </div>
+        <div class="cards" id="player-cards"></div>
+      </section>
+    </main>
+
+    <footer class="controls">
+      <div class="bet-panel" id="bet-panel">
+        <span class="label">Aposta</span>
+        <button class="btn btn-chip" data-bet="-10">-10</button>
+        <span class="bet-amount" id="bet-amount">10</span>
+        <button class="btn btn-chip" data-bet="10">+10</button>
+        <button class="btn btn-primary" id="deal-btn">Apostar</button>
+      </div>
+
+      <div class="action-panel hidden" id="action-panel">
+        <button class="btn btn-primary" id="hit-btn">Pedir carta</button>
+        <button class="btn btn-primary" id="stand-btn">Parar</button>
+        <button class="btn btn-primary" id="double-btn">Dobrar</button>
+      </div>
+
+      <div class="action-panel hidden" id="next-panel">
+        <button class="btn btn-primary" id="next-round-btn">Próxima rodada</button>
+      </div>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
