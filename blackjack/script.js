@@ -270,6 +270,12 @@ function finishRound() {
 }
 
 function nextRound() {
+  playerHand = [];
+  dealerHand = [];
+  el.playerCards.innerHTML = '';
+  el.dealerCards.innerHTML = '';
+  el.playerScore.textContent = '0';
+  el.dealerScore.textContent = '0';
   clampBet();
   showBetPanel();
   setMessage(state.balance < BET_STEP ? 'Sem moedas suficientes. Clique em Reiniciar para jogar novamente.' : 'Faça sua aposta para começar');
