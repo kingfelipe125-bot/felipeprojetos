@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Blackjack 21</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -14,7 +14,9 @@
         <span class="label">Moedas</span>
         <span class="balance" id="balance">100</span>
       </div>
-      <button id="reset-btn" class="btn btn-ghost" title="Reinicia o saldo para 100 moedas">Reiniciar</button>
+      <button id="reset-btn" class="btn btn-ghost" title="Reinicia o saldo para 100 moedas" aria-label="Reiniciar">
+        <span aria-hidden="true">↺</span><span class="reset-label">Reiniciar</span>
+      </button>
     </header>
 
     <main class="board">
