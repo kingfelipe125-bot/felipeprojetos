@@ -2,6 +2,10 @@
 
 Jogo de Blackjack em HTML/CSS/JS puro, sem backend e sem dinheiro real — só moedinhas fictícias do jogo. Você começa com 100 moedas, aposta de 10 em 10, e o saldo fica salvo no navegador (`localStorage`) entre sessões.
 
+## Jogar online
+
+https://kingfelipe125-bot.github.io/felipeprojetos/
+
 ## Como rodar
 
 Não precisa de instalação nem servidor. Basta abrir o arquivo direto no navegador:
