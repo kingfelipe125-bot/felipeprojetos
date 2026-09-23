@@ -1,5 +1,8 @@
 # Gerenciador de Versões de Projetos (CAD/BIM)
 
+> Este repositório também contém o **Poker Night** (Texas Hold'em com moedas virtuais, sem valor real),
+> um projeto independente na pasta [`poker/`](poker/README.md), publicado como site estático no GitHub Pages.
+
 Aplicação web para controle de revisões de plantas de arquitetura e engenharia, com validação em campo via QR Code. Garante que equipes de canteiro de obras sempre acessem a versão mais recente e aprovada de cada folha, evitando retrabalho por uso de revisões obsoletas.
 
 ## Stack
