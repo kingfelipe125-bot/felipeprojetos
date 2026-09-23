@@ -40,6 +40,9 @@ jobs:
 
       - id: pages
         uses: actions/configure-pages@v5
+        with:
+          # Tenta ativar o Pages (fonte: GitHub Actions) se ainda não estiver ativo.
+          enablement: true
 
       - run: npm ci
       - run: npm test
