@@ -21,10 +21,10 @@ npm run preview    # serve poker/out/ localmente
 
 O build é 100% estático (`output: "export"`), então funciona em qualquer hospedagem de arquivos.
 
-- **GitHub Pages:** o workflow `.github/workflows/poker-pages.yml` testa, compila e publica em
-  `https://<usuario>.github.io/felipeprojetos/poker/` a cada push na `main` que altere `poker/`.
-  Ative uma vez em *Settings → Pages → Source: GitHub Actions*. O `index.html` da raiz do
-  repositório continua publicado na raiz do site.
+- **GitHub Pages:** o site deste repositório é servido pela branch `gh-pages`. O workflow
+  `.github/workflows/poker-pages.yml` roda os testes, compila e atualiza **somente** a pasta
+  `gh-pages/poker/` a cada push na `main` que altere `poker/`. Endereço:
+  https://kingfelipe125-bot.github.io/felipeprojetos/poker/
 - **Outra hospedagem em subpasta:** `BASE_PATH=/minha/pasta npm run build`.
 - **Netlify / Vercel / Cloudflare Pages:** diretório base `poker`, comando `npm run build`, saída `out`.
 
