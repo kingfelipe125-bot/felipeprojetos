@@ -1,0 +1,72 @@
+# Publica o jogo de Poker (pasta poker/) no GitHub Pages.
+# Resultado: <usuario>.github.io/felipeprojetos/poker/
+# O index.html que já existe na raiz do repositório continua publicado na raiz do site.
+#
+# Para ativar: Settings → Pages → Build and deployment → Source: "GitHub Actions".
+name: Deploy Poker no GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "poker/**"
+      - "index.html"
+      - ".github/workflows/poker-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: poker
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: poker/package-lock.json
+
+      - id: pages
+        uses: actions/configure-pages@v5
+        with:
+          # Tenta ativar o Pages (fonte: GitHub Actions) se ainda não estiver ativo.
+          enablement: true
+
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+        env:
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}/poker
+
+      - name: Montar site (raiz + /poker)
+        run: |
+          mkdir -p ../_site
+          cp ../index.html ../_site/index.html
+          cp -r out ../_site/poker
+          touch ../_site/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}poker/
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
